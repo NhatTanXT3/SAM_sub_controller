@@ -74,6 +74,11 @@ void uax_get_jointAngle10bit(uint32_t ui32Base,unsigned char ID){
 		break;
 	}
 
+	toggle_led[1]^=1;
+	led(LED_BLUE,toggle_led[1]);
+
+	flagReadBusy=1;
+
 	UARTCharPut(ui32Base,data[0]);
 	UARTCharPut(ui32Base,data[1]);
 	UARTCharPut(ui32Base,data[2]);
@@ -81,6 +86,7 @@ void uax_get_jointAngle10bit(uint32_t ui32Base,unsigned char ID){
 	UARTCharPut(ui32Base,data[4]);
 	UARTCharPut(ui32Base,data[5]);
 	UARTCharPut(ui32Base,data[6]);
+	Timer1_Reset();
 }
 
 void uax_set_jointAngle10bit(uint32_t ui32Base,unsigned char ID,unsigned int value){
@@ -181,11 +187,11 @@ void RS485PutData(){
 	data[2]=count;
 	data[3]=(data[1]^data[2])&0x7F;
 	//	led(LED_GREEN,1);
-//	GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_4,GPIO_PIN_4);
-//	UARTCharPut(UART_RS485,data[0]);
-//	UARTCharPut(UART_RS485,data[1]);
-//	UARTCharPut(UART_RS485,data[2]);
-//	UARTCharPut(UART_RS485,data[3]);
+	//	GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_4,GPIO_PIN_4);
+	//	UARTCharPut(UART_RS485,data[0]);
+	//	UARTCharPut(UART_RS485,data[1]);
+	//	UARTCharPut(UART_RS485,data[2]);
+	//	UARTCharPut(UART_RS485,data[3]);
 
 }
 
@@ -202,7 +208,7 @@ void main(){
 	SysTick_Init();
 
 	//	UART0_Init();
-//	RS485_3_Init();
+	//	RS485_3_Init();
 	RS485_4_Init();
 
 	UART5_Init();
@@ -252,9 +258,7 @@ void task_20Hz(){
 		//		//		led(LED_RED,toggle_led[0]);
 		//		//		uax_get_jointAngle10bit(0);
 
-		toggle_led[1]^=1;
-		led(LED_BLUE,toggle_led[1]);
-		Timer1_Reset();
+
 
 		//		uax_get_jointAngle10bit(0);
 		//		RS485PutStr("hello friend");
@@ -298,7 +302,7 @@ void communication(){
 		//		serialPC.Command_Data=
 		if(serialPC.Command_Data[0]==PC_HEADER_)
 		{
-			if(serialPC.Command_Data[1]&0x80)
+			if(serialPC.Command_Data[1]&0x80) // special command
 			{
 				switch(serialPC.Command_Data[1]){
 				case  PC_SAM_SP_MODE_1_:
@@ -315,7 +319,7 @@ void communication(){
 								sam1.id=serialPC.Command_Data[refIndex]&0x1F;
 								sam1.mode=serialPC.Command_Data[refIndex]>>5;
 								sam1.SAMmode=((serialPC.Command_Data[refIndex]&0x60)>>5)+((serialPC.Command_Data[refIndex+1]&0x60)>>3);
-								sam1.position12=(serialPC.Command_Data[refIndex+1]<<7)+(serialPC.Command_Data[refIndex+2]&0X7F);
+								sam1.position12=((serialPC.Command_Data[refIndex+1]&0x1F)<<7)+(serialPC.Command_Data[refIndex+2]&0X7F);
 								uax_set_jointAngle10bit(UART_RS485_4_,sam1.id,sam1.position12);
 								//							display_com();
 							}
@@ -342,7 +346,8 @@ void communication(){
 			else{
 				if(serialPC.dataIndex==PC_SAM_MODE_1_DATALENGTH_)
 				{
-					switch(serialPC.Command_Data[1]>>5)
+					unsigned char mode=((serialPC.Command_Data[1]&0x60)>>5)+((serialPC.Command_Data[2]&0x60)>>3);
+					switch(mode)
 					{
 					case PC_SAM_MODE_1_:
 						SerialPutStrLn(UART_PC_,"M1");
@@ -350,9 +355,10 @@ void communication(){
 						{
 							sam1.id=serialPC.Command_Data[1]&0x1F;
 							sam1.mode=PC_SAM_MODE_1_;
-							sam1.position12=(serialPC.Command_Data[2]<<7)+(serialPC.Command_Data[3]&0X7F);
+//							sam1.SAMmode=((serialPC.Command_Data[1]&0x60)>>5)+((serialPC.Command_Data[2]&0x60)>>3);
+							sam1.position12=((serialPC.Command_Data[2]&0x1F)<<7)+(serialPC.Command_Data[3]&0X7F);
 							uax_set_jointAngle10bit(UART_RS485_4_,sam1.id,sam1.position12);
-							//							display_com();
+							//display_com();
 						}
 						else
 						{
@@ -361,7 +367,12 @@ void communication(){
 						break;
 					case PC_SAM_MODE_2_:
 						SerialPutStrLn(UART_PC_,"M2");
+
+						while(flagReadBusy);
 						uax_get_jointAngle10bit(UART_RS485_4_,sam1.id);
+
+
+
 						break;
 					case PC_SAM_MODE_3_:
 						SerialPutStrLn(UART_PC_,"M3");
@@ -370,6 +381,7 @@ void communication(){
 						SerialPutStrLn(UART_PC_,"M4");
 						break;
 					default:
+						SerialPutStrLn(UART_PC_,"M?");
 						break;
 					}
 

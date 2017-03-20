@@ -16,7 +16,7 @@
 #define PC_HEADER_	0xFF
 //=====QUICK MODE DEFINE=====
 #define PC_SAM_MODE_1_ 0
-#define PC_SAM_MODE_2_ 1
+#define PC_SAM_MODE_2_ 5
 #define PC_SAM_MODE_3_ 2
 #define PC_SAM_MODE_4_ 3
 

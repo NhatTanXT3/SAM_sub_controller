@@ -20,6 +20,7 @@ myRS485.obj: C:/ti/TivaWare_C_Series-2.1.0.12573/driverlib/interrupt.h
 myRS485.obj: C:/ti/TivaWare_C_Series-2.1.0.12573/utils/ringbuf.h
 myRS485.obj: ../myRS485.h
 myRS485.obj: ../myIO.h
+myRS485.obj: ../SAM.h
 
 ../myRS485.c: 
 C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.2/include/stdint.h: 
@@ -41,3 +42,4 @@ C:/ti/TivaWare_C_Series-2.1.0.12573/driverlib/interrupt.h:
 C:/ti/TivaWare_C_Series-2.1.0.12573/utils/ringbuf.h: 
 ../myRS485.h: 
 ../myIO.h: 
+../SAM.h: 

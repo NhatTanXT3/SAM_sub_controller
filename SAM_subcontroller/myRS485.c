@@ -23,6 +23,7 @@
 /*-----my include-------------------*/
 #include "myRS485.h"
 #include "myIO.h"
+#include "SAM.h"
 
 /*
  *  RS485 4 module using UART4 and PA3
@@ -94,7 +95,7 @@ void UART4_Interrupt_Handler(void)
 
 		char charData[3];
 		unsigned char dataCount=0;
-		unsigned int UART4_data=0;
+//		unsigned int UART4_data=0;
 		while(UARTCharsAvail(UART4_BASE))
 		{
 			charData[dataCount]=(char)UARTCharGet(UART4_BASE);
@@ -102,7 +103,10 @@ void UART4_Interrupt_Handler(void)
 		}
 		if(dataCount==2)
 		{
-			UART4_data=((charData[0]&0x1F)<<7)+(charData[1]&0x7F);
+			samPosition12.s1=((charData[0]&0x1F)<<7)+(charData[1]&0x7F);
+			flagReadSuccess=1;
+			toggle_led[1]^=1;
+			led(LED_BLUE,toggle_led[1]);
 		}
 	}
 }

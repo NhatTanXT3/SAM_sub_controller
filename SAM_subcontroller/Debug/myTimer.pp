@@ -16,6 +16,7 @@ myTimer.obj: C:/ti/TivaWare_C_Series-2.1.0.12573/inc/hw_memmap.h
 myTimer.obj: C:/ti/TivaWare_C_Series-2.1.0.12573/driverlib/systick.h
 myTimer.obj: ../myIO.h
 myTimer.obj: ../myTimer.h
+myTimer.obj: ../SAM.h
 
 ../myTimer.c: 
 C:/ti/ccsv6/tools/compiler/ti-cgt-arm_5.2.2/include/stdint.h: 
@@ -33,3 +34,4 @@ C:/ti/TivaWare_C_Series-2.1.0.12573/inc/hw_memmap.h:
 C:/ti/TivaWare_C_Series-2.1.0.12573/driverlib/systick.h: 
 ../myIO.h: 
 ../myTimer.h: 
+../SAM.h: 

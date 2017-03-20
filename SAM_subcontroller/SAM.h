@@ -17,7 +17,16 @@ typedef struct {
 	unsigned int position12;
 } SAM;
 
+typedef struct {
+	unsigned int s1;
+	unsigned int s2;
+	unsigned int s3;
+	unsigned int s4;
+}SAM_position12;
+extern SAM_position12 samPosition12;
 extern SAM sam1;
+extern volatile unsigned char flagReadBusy;
+extern volatile unsigned  char flagReadSuccess;
 
 
 #endif /* SAM_H_ */

@@ -16,6 +16,7 @@
 
 #include "myIO.h"
 #include  "myTimer.h"
+#include "SAM.h"
 
 //#include "PPM.h"
 
@@ -135,6 +136,7 @@ void  Timer1_Interrupt_Handler(void){
 }
 void Timer1_Reset(){
 	TimerEnable(TIMER1_BASE,TIMER_A);
+	flagReadBusy=0;
 }
 // timer is used for real time clock
 void Timer0_init()

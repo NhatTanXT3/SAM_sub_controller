@@ -10,7 +10,12 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+#include "inc/hw_types.h"
 #include "inc/hw_memmap.h"
+#include "driverlib/pin_map.h"
+#include "driverlib/rom_map.h"
+
+#include "inc/hw_gpio.h"
 #include "driverlib/sysctl.h"
 #include "driverlib/gpio.h"
 #include "inc/tm4c123gh6pm.h"
@@ -24,6 +29,97 @@
 #include "myRS485.h"
 #include "myIO.h"
 #include "SAM.h"
+
+/*
+ *  RS485 2 module using UART2 and PA2
+ */
+void RS485_2_Init(){
+	//
+	// Enable Peripheral Clocks
+	//
+	SysCtlPeripheralEnable(SYSCTL_PERIPH_UART2);
+	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);
+
+	//
+	// Enable pin PD7 for UART2 U2TX
+	// First open the lock and select the bits we want to modify in the GPIO commit register.
+	//
+	HWREG(GPIO_PORTD_BASE + GPIO_O_LOCK) = GPIO_LOCK_KEY;
+	HWREG(GPIO_PORTD_BASE + GPIO_O_CR) = 0x80;
+
+	//
+	// Now modify the configuration of the pins that we unlocked.
+	//
+	GPIOPinConfigure(GPIO_PD7_U2TX);
+	GPIOPinTypeUART(GPIO_PORTD_BASE, GPIO_PIN_7);
+
+	//
+	// Enable pin PD6 for UART2 U2RX
+	//
+	GPIOPinConfigure(GPIO_PD6_U2RX);
+	GPIOPinTypeUART(GPIO_PORTD_BASE, GPIO_PIN_6);
+
+	UARTConfigSetExpClk(UART2_BASE, SysCtlClockGet(), 1500000,
+			(UART_CONFIG_WLEN_8 | UART_CONFIG_STOP_ONE | UART_CONFIG_PAR_NONE));
+
+	UARTEnable(UART2_BASE);
+
+
+	//	UARTIntEnable(UART5_BASE, UART_INT_RX|UART_INT_RT);
+	//	UARTFIFODisable(UART5_BASE);
+
+	UARTFIFOEnable(UART2_BASE);
+	UARTFIFOLevelSet(UART2_BASE,UART_FIFO_TX1_8,UART_FIFO_RX2_8);
+	UARTTxIntModeSet(UART2_BASE,UART_TXINT_MODE_EOT);
+	UARTIntEnable(UART2_BASE,  UART_INT_RT|UART_INT_RX|UART_INT_TX);
+
+	IntMasterEnable(); //enable processor interrupts
+	IntEnable(INT_UART2); //enable the UART interrup
+
+	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
+	GPIOPinTypeGPIOOutput(GPIO_PORTA_BASE, GPIO_PIN_2);
+}
+
+void UART2_Interrupt_Handler(void)
+{
+	uint32_t interrupt_status;
+	interrupt_status=UARTIntStatus(UART2_BASE,true);
+
+	if((interrupt_status&UART_INT_TX))
+	{
+		//GPIOPinWrite(GPIO_PORTF_BASE,GPIO_PIN_3,0);
+		GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_2,0);
+		UARTIntClear(UART2_BASE,UART_INT_TX);
+	}
+//	else if(interrupt_status&UART_INT_RX)
+//	{
+//		UARTIntClear(UART2_BASE,UART_INT_RX);//|UART_INT_RX
+//		char charData;
+//		while(UARTCharsAvail(UART2_BASE))
+//			charData=(char)UARTCharGet(UART2_BASE);
+//	}
+	else if(interrupt_status&(UART_INT_RT|UART_INT_RX))
+	{
+		UARTIntClear(UART2_BASE,UART_INT_RT|UART_INT_RX);
+		char charData[3];
+		unsigned char dataCount=0;
+		while(UARTCharsAvail(UART2_BASE))
+		{
+			charData[dataCount]=(char)UARTCharGet(UART2_BASE);
+			dataCount++;
+		}
+		if(dataCount==2)
+		{
+			if(samReadBusy)
+			{
+				samPosition12[samReadCurrentID_C2]=((charData[0]&0x1F)<<7)+(charData[1]&0x7F);
+				samDataAvail[samReadCurrentID_C2]=1;
+			}
+
+		}
+	}
+}
+
 
 /*
  *  RS485 4 module using UART4 and PA3
@@ -54,14 +150,13 @@ void RS485_4_Init(){
 	//	IntPrioritySet(INT_UART5,0xE0);
 	IntPrioritySet(INT_UART4,0);
 
-	//	UARTIntEnable(UART5_BASE, UART_INT_RX|UART_INT_RT);
-	//	UARTFIFODisable(UART5_BASE);
+
 
 	UARTFIFOEnable(UART4_BASE);
 	UARTFIFOLevelSet(UART4_BASE,UART_FIFO_TX1_8,UART_FIFO_RX2_8);
 	UARTTxIntModeSet(UART4_BASE,UART_TXINT_MODE_EOT);
 	UARTIntEnable(UART4_BASE,  UART_INT_RT|UART_INT_RX|UART_INT_TX);
-	//	UARTIntEnable(UART5_BASE,  UART_INT_RX|UART_INT_TX);
+
 
 
 	IntMasterEnable(); //enable processor interrupts
@@ -95,7 +190,7 @@ void UART4_Interrupt_Handler(void)
 
 		char charData[3];
 		unsigned char dataCount=0;
-//		unsigned int UART4_data=0;
+		//		unsigned int UART4_data=0;
 		while(UARTCharsAvail(UART4_BASE))
 		{
 			charData[dataCount]=(char)UARTCharGet(UART4_BASE);
@@ -103,10 +198,15 @@ void UART4_Interrupt_Handler(void)
 		}
 		if(dataCount==2)
 		{
-			samPosition12.s1=((charData[0]&0x1F)<<7)+(charData[1]&0x7F);
-			flagReadSuccess=1;
-			toggle_led[1]^=1;
-			led(LED_BLUE,toggle_led[1]);
+			if(samReadBusy)
+			{
+				samPosition12[samReadCurrentID_C4]=((charData[0]&0x1F)<<7)+(charData[1]&0x7F);
+				samDataAvail[samReadCurrentID_C4]=1;
+			}
+			//			a Tan
+			//			samPosition12.s1=((charData[0]&0x1F)<<7)+(charData[1]&0x7F);
+			//			toggle_led[1]^=1;
+			//			led(LED_BLUE,toggle_led[1]);
 		}
 	}
 }

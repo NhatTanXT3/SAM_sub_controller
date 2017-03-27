@@ -131,12 +131,12 @@ void Timer1_init()
 }
 void  Timer1_Interrupt_Handler(void){
 	TimerIntClear(TIMER1_BASE,TIMER_TIMA_TIMEOUT);
+	samReadBusy=0;
 	toggle_led[1]^=1;
 	led(LED_BLUE,toggle_led[1]);
 }
 void Timer1_Reset(){
 	TimerEnable(TIMER1_BASE,TIMER_A);
-	flagReadBusy=0;
 }
 // timer is used for real time clock
 void Timer0_init()

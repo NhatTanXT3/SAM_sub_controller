@@ -36,6 +36,7 @@ static void IntDefaultHandler(void);
 
 extern void  UART0_Interrupt_Handler(void);
 extern void  UART1_Interrupt_Handler(void);
+extern void UART2_Interrupt_Handler(void);
 extern void  UART3_Interrupt_Handler(void);
 
 extern void UART4_Interrupt_Handler(void);
@@ -125,7 +126,7 @@ void (* const g_pfnVectors[])(void) =
     IntDefaultHandler,                      // GPIO Port F
     IntDefaultHandler,                      // GPIO Port G
     IntDefaultHandler,                      // GPIO Port H
-    IntDefaultHandler,                      // UART2 Rx and Tx
+	UART2_Interrupt_Handler,                      // UART2 Rx and Tx
     IntDefaultHandler,                      // SSI1 Rx and Tx
     IntDefaultHandler,                      // Timer 3 subtimer A
     IntDefaultHandler,                      // Timer 3 subtimer B

@@ -392,6 +392,7 @@ void SerialPutStr(uint32_t ui32Base,char *uart_str)
 void SerialPutStrLn(uint32_t ui32Base,char *uart_str)
 {
 	while(*uart_str != '\0') {UARTCharPut(ui32Base,*uart_str++ );}
+//	UARTCharPut(ui32Base,127);
 	UARTCharPut(ui32Base,'\r');
 	UARTCharPut(ui32Base,'\n');
 }

@@ -30,7 +30,8 @@
 #include "myFIFO.h"
 
 MySerial serialPC;
-FIFO serialPcFIFO;
+unsigned char dataSendBuffer[150];
+//FIFO serialPcFIFO;
 
 //void UART_PC_Init(){
 //	UART3_Init();
@@ -73,7 +74,6 @@ void UART2_Init(){
 
 void UART5_Init()
 {
-
 	//
 	// Enable Peripheral Clocks
 	//
@@ -100,7 +100,7 @@ void UART5_Init()
 
 	UARTFIFOLevelSet(UART5_BASE,UART_FIFO_TX1_8,UART_FIFO_RX4_8);
 	UARTIntEnable(UART5_BASE, UART_INT_RX|UART_INT_RT);
-	myFIFO_init(&serialPcFIFO);
+//	myFIFO_init(&serialPcFIFO);
 }
 
 void UART5_Interrupt_Handler(void)
@@ -112,12 +112,12 @@ void UART5_Interrupt_Handler(void)
 			while(UARTCharsAvail(UART5_BASE))
 			{
 				char charData=(char)UARTCharGet(UART5_BASE);
-				if(charData==PC_HEADER_){
+				if(charData==PC2MCU_HEADER_){
 					serialPC.dataIndex=0;
 					//				serialPC.dataCount=0;
 					//					FIFO_Rx_clear(&serialPcFIFO);
 				}
-				else if(charData==PC_TERMINATOR_){
+				else if(charData==PC2MCU_TERMINATOR_){
 					serialPC.Flag_receive=1;
 				}
 				if(serialPC.dataIndex<SERIAL_BUFFER_SIZE_)
@@ -165,6 +165,34 @@ void serialGetData(uint32_t ui32Base,char *uart_str)
 	{
 		*uart_str++=(char)UARTCharGet(ui32Base);
 	}
+}
+
+void SerialSendData(uint32_t ui32Base,unsigned char *uart_str)
+{
+	while(*uart_str != MCU2PC_TERMINATOR_) {UARTCharPut(ui32Base,*uart_str++ );}
+	UARTCharPut(ui32Base,MCU2PC_TERMINATOR_);
+//	UARTCharPut(ui32Base,'\r');
+//	UARTCharPut(ui32Base,'\n');
+}
+//void SerialPutStrLn(uint32_t ui32Base,char *uart_str)
+//{
+//	while(*uart_str != '\0') {UARTCharPut(ui32Base,*uart_str++ );}
+//	UARTCharPut(ui32Base,'\r');
+//	UARTCharPut(ui32Base,'\n');
+//}
+
+void SerialSend_1_Position(uint32_t ui32Base,unsigned char ID,unsigned int value){
+			unsigned char data[6];
+			data[0]=MCU2PC_HEADER_;
+			data[1]=ID&0x1F;
+			data[2]=(unsigned char)((value>>7)&0x1F); // target position: upper 5bits
+			data[3]=(unsigned char)(value&0x7F); //target position: lower 7 bits
+			data[4]=(data[1]^data[2]^data[3])&0x7F;//check sum
+			data[5]=MCU2PC_TERMINATOR_;
+			SerialSendData(ui32Base,data);
+}
+void SerialSend_All_Position(uint32_t ui32Base,unsigned char ID,unsigned int *SamPos){
+
 }
 
 

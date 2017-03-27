@@ -12,8 +12,10 @@
  * Define uart for hardware
  */
 #define UART_PC_	UART5_BASE
-#define PC_TERMINATOR_ 0xFE
-#define PC_HEADER_	0xFF
+#define PC2MCU_TERMINATOR_ 	0xFE
+#define PC2MCU_HEADER_		0xFF
+#define MCU2PC_HEADER_		0xFF
+#define MCU2PC_TERMINATOR_ 	0xFE
 //=====QUICK MODE DEFINE=====
 #define PC_SAM_MODE_1_ 0
 #define PC_SAM_MODE_2_ 5
@@ -27,7 +29,7 @@
 
 //=====SPECIAL MODE DEFINE
 #define PC_SAM_SP_MODE_1_ 0xF0
-#define PC_SAM_SP_MODE_2_ 0xE0
+#define PC_SAM_SP_MODE_2_ 0xCC
 #define PC_SAM_SP_MODE_3_ 0xC0
 #define PC_SAM_SP_MODE_4_ 0x80
 
@@ -41,6 +43,7 @@ typedef volatile struct {
 	unsigned char dataCount;
 	unsigned char Command_Data[SERIAL_BUFFER_SIZE_];
 } MySerial;
+extern unsigned char dataSendBuffer[];
 
 extern MySerial serialPC;
 
@@ -52,6 +55,9 @@ extern void UART2_Init();
 extern void UART4_Init();
 extern void UART7_Init();
 
-extern void serialGetData(uint32_t ui32Base,char *uart_str);
+extern void SerialGetData(uint32_t ui32Base,char *uart_str);
+extern void SerialSendData(uint32_t ui32Base,unsigned char *uart_str);
+extern void SerialSend_1_Position(uint32_t ui32Base,unsigned char ID,unsigned int value);
+extern void SerialSend_All_Position(uint32_t ui32Base,unsigned char ID,unsigned int *SamPos);
 
 #endif /* MYSERIAL_H_ */

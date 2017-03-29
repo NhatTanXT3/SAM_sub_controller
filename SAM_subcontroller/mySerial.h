@@ -17,10 +17,12 @@
 #define MCU2PC_HEADER_		0xFF
 #define MCU2PC_TERMINATOR_ 	0xFE
 //=====QUICK MODE DEFINE=====
-#define PC_SAM_MODE_1_ 0
-#define PC_SAM_MODE_2_ 5
-#define PC_SAM_MODE_3_ 2
-#define PC_SAM_MODE_4_ 3
+#define PC_SAM_MODE_0_ 0
+#define PC_SAM_MODE_1_ 1
+#define PC_SAM_MODE_2_ 2
+#define PC_SAM_MODE_3_ 3
+#define PC_SAM_MODE_4_ 4
+#define PC_SAM_MODE_5_ 5
 
 #define PC_SAM_MODE_1_DATALENGTH_ 6
 #define PC_SAM_MODE_2_DATALENGTH_

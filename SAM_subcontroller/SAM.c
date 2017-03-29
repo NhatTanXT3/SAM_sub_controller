@@ -147,9 +147,11 @@ void SAM_get_jointAngle10bit(unsigned char ID){
 
 	switch(ui32Base){
 	case UART_RS485_4_:
+		samReadCurrentID_C4=ID;
 		GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_3,GPIO_PIN_3);
 		break;
 	case UART_RS485_2_:
+		samReadCurrentID_C2=ID;
 		GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_2,GPIO_PIN_2);
 		break;
 	case UART_RS485_3_:

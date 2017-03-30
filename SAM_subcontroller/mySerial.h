@@ -32,8 +32,8 @@
 //=====SPECIAL MODE DEFINE
 #define PC_SAM_SP_MODE_1_ 0xF0
 #define PC_SAM_SP_MODE_2_ 0xCC
-#define PC_SAM_SP_MODE_3_ 0xC0
-#define PC_SAM_SP_MODE_4_ 0x80
+#define PC_SAM_SP_MODE_3_ 0xAA
+#define PC_SAM_SP_MODE_4_ 0x95
 
 //#define PC_SAM_READ_1_ 2
 //#define
@@ -61,5 +61,6 @@ extern void SerialGetData(uint32_t ui32Base,char *uart_str);
 extern void SerialSendData(uint32_t ui32Base,unsigned char *uart_str);
 extern void SerialSend_1_Position(uint32_t ui32Base,unsigned char ID,unsigned int value);
 extern void SerialSend_All_Position(uint32_t ui32Base,unsigned char ID,unsigned int *SamPos);
+extern void SerialSend_PID(uint32_t ui32Base,unsigned char ID,unsigned char P, unsigned char I, unsigned char D);
 
 #endif /* MYSERIAL_H_ */

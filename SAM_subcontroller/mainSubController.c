@@ -152,7 +152,7 @@ void communication(){
 			{
 				switch(serialPC.Command_Data[1]){
 				case  PC_SAM_SP_MODE_1_:
-//					SerialPutStrLn(UART_PC_,"sm1");
+					//					SerialPutStrLn(UART_PC_,"sm1");
 					if(((serialPC.dataIndex-3)%4)==0){ // check length of data
 						unsigned char numOfSam=serialPC.dataIndex/4;
 						unsigned char i;
@@ -214,12 +214,6 @@ void communication(){
 						SAM_get_jointAngle10bit(samReadCurrentID_C4);
 						Timer1_Reset();
 
-						//						while(samReadBusy);
-						//						samReadBusy=1;
-						//						samReadCurrentID_C4=5;
-						//						SAM_get_jointAngle10bit(samReadCurrentID_C4);
-						//						Timer1_Reset();
-
 
 						while(samReadBusy);
 						unsigned char i;
@@ -230,6 +224,7 @@ void communication(){
 						{
 							if(samDataAvail[i])
 							{
+								samDataAvail[i]=0;
 								dataSendBuffer[refIndex++]=i&0x1F;
 								dataSendBuffer[refIndex++]=(samPosition12[i]>>7)&0x1F;
 								dataSendBuffer[refIndex++]=(samPosition12[i])&0x7F;
@@ -243,9 +238,84 @@ void communication(){
 						SerialPutStrLn(UART_PC_,"e_l_3");
 					}
 					break;
+				case PC_SAM_SP_MODE_3_:
+					SerialPutStrLn(UART_PC_,"sm3");
+					if(serialPC.dataIndex==9){ //check length of data
+						if(((serialPC.Command_Data[2]^serialPC.Command_Data[3]^serialPC.Command_Data[4]^serialPC.Command_Data[5]^serialPC.Command_Data[6])&0x7F)==serialPC.Command_Data[7]){
+							sam1.id=serialPC.Command_Data[2]&0x1F;
+							sam1.P=(serialPC.Command_Data[4]<<1)+((serialPC.Command_Data[3]&4)>>2);
+							sam1.I=(serialPC.Command_Data[5]<<1)+((serialPC.Command_Data[3]&2)>>1);
+							sam1.D=(serialPC.Command_Data[6]<<1)+(serialPC.Command_Data[3]&1);
+
+							while(samReadBusy);
+							samReadBusy=1;
+							SAM_set_PD_Runtime(sam1.id, sam1.P, sam1.D);
+							Timer1_Reset();
+
+							while(samReadBusy);
+							samReadBusy=1;
+							SAM_set_I_Runtime(sam1.id, sam1.I);
+							Timer1_Reset();
+
+							while(samReadBusy);
+
+						}
+						else{
+							SerialPutStrLn(UART_PC_,"e_cs");
+						}
+					}
+					else{
+						SerialPutStrLn(UART_PC_,"e_l");
+					}
+					break;
+				case PC_SAM_SP_MODE_4_:
+					SerialPutStrLn(UART_PC_,"sm4");
+					if(serialPC.dataIndex==4){ //check length of data
+						unsigned char update_count=0;
+						sam1.id=serialPC.Command_Data[2];
+						while(samReadBusy);
+						samReadBusy=1;
+						SAM_get_PD(sam1.id);
+						Timer1_Reset();
+
+						while(samReadBusy);
+						if(samDataAvail[sam1.id])
+						{
+							update_count++;
+							samDataAvail[sam1.id]=0;
+						}
+
+						samReadBusy=1;
+						SAM_get_I(sam1.id);
+						Timer1_Reset();
+
+						while(samReadBusy);
+						if(samDataAvail[sam1.id])
+						{
+							update_count++;
+							samDataAvail[sam1.id]=0;
+						}
+
+						if(update_count==2)
+						{
+							sam1.P=samP[sam1.id];
+							sam1.I=samI[sam1.id];
+							sam1.D=samD[sam1.id];
+							SerialSend_PID(UART_PC_,sam1.id,sam1.P, sam1.I,sam1.D);
+						}
+						else{
+							SerialPutStrLn(UART_PC_,"e_u");
+						}
+
+
+
+					}
+					else{
+						SerialPutStrLn(UART_PC_,"e_l");
+					}
+					break;
 				default:
 					break;
-
 				}
 			}
 			else{
@@ -256,7 +326,7 @@ void communication(){
 					switch(mode)
 					{
 					case PC_SAM_MODE_0_:
-//						SerialPutStrLn(UART_PC_,"M0");
+						//						SerialPutStrLn(UART_PC_,"M0");
 						if(((serialPC.Command_Data[1]^serialPC.Command_Data[2]^serialPC.Command_Data[3])&0x7F)==serialPC.Command_Data[4])
 						{
 							sam1.mode=PC_SAM_MODE_0_;
@@ -325,7 +395,7 @@ void communication(){
 
 						while(samReadBusy);
 						samReadBusy=1;
-//						samReadCurrentID_C4=sam1.id;
+						//						samReadCurrentID_C4=sam1.id;
 						SAM_get_jointAngle10bit(sam1.id);
 						Timer1_Reset();
 

@@ -51,6 +51,9 @@ typedef struct {
 	unsigned char mode;
 	unsigned char position8;
 	unsigned int position12;
+	unsigned char P;
+	unsigned char I;
+	unsigned char D;
 } SAM;
 
 //typedef volatile struct {
@@ -64,15 +67,26 @@ typedef struct {
 //	unsigned char busy;
 //	unsigned char currentID;
 //}RS485_Channel_State;
-
+#define SAMREAD_POS12_	0
+#define SAMREAD_PD_		1
+#define SAMREAD_I_		2
+#define SAMREAD_POS8_	3
 
 extern volatile unsigned char samReadBusy;
+extern unsigned char samReadMode;
 extern volatile unsigned int samPosition12[];
 extern volatile unsigned char samDataAvail[];
+extern volatile unsigned char samP[];
+extern volatile unsigned char samI[];
+extern volatile unsigned char samD[];
 extern volatile unsigned char samReadCurrentID_C4;
 extern volatile unsigned char samReadCurrentID_C2;
 extern SAM sam1;
 
+extern void SAM_set_PD_Runtime(unsigned char ID, unsigned char P, unsigned char D);
+extern void SAM_set_I_Runtime(unsigned char ID, unsigned char I);
+extern void SAM_get_PD(unsigned char ID);
+extern void SAM_get_I(unsigned char ID);
 
 extern void SAM_get_jointAngle10bit(unsigned char ID);
 extern void SAM_set_jointAngle10bit(unsigned char ID,unsigned int value);

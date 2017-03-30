@@ -91,13 +91,13 @@ void UART2_Interrupt_Handler(void)
 		GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_2,0);
 		UARTIntClear(UART2_BASE,UART_INT_TX);
 	}
-//	else if(interrupt_status&UART_INT_RX)
-//	{
-//		UARTIntClear(UART2_BASE,UART_INT_RX);//|UART_INT_RX
-//		char charData;
-//		while(UARTCharsAvail(UART2_BASE))
-//			charData=(char)UARTCharGet(UART2_BASE);
-//	}
+	//	else if(interrupt_status&UART_INT_RX)
+	//	{
+	//		UARTIntClear(UART2_BASE,UART_INT_RX);//|UART_INT_RX
+	//		char charData;
+	//		while(UARTCharsAvail(UART2_BASE))
+	//			charData=(char)UARTCharGet(UART2_BASE);
+	//	}
 	else if(interrupt_status&(UART_INT_RT|UART_INT_RX))
 	{
 		UARTIntClear(UART2_BASE,UART_INT_RT|UART_INT_RX);
@@ -112,7 +112,20 @@ void UART2_Interrupt_Handler(void)
 		{
 			if(samReadBusy)
 			{
-				samPosition12[samReadCurrentID_C2]=((charData[0]&0x1F)<<7)+(charData[1]&0x7F);
+				switch(samReadMode){
+				case SAMREAD_POS12_:
+					samPosition12[samReadCurrentID_C2]=((charData[0]&0x1F)<<7)+(charData[1]&0x7F);
+					break;
+				case SAMREAD_PD_:
+					samP[samReadCurrentID_C2]=charData[0];
+					samD[samReadCurrentID_C2]=charData[1];
+					break;
+				case SAMREAD_I_:
+					samI[samReadCurrentID_C2]=charData[0];
+					break;
+				default:
+					break;
+				}
 				samDataAvail[samReadCurrentID_C2]=1;
 			}
 
@@ -177,13 +190,13 @@ void UART4_Interrupt_Handler(void)
 		GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_3,0);
 		UARTIntClear(UART4_BASE,UART_INT_TX);
 	}
-//	else if(interrupt_status&UART_INT_RX)
-//	{
-//		UARTIntClear(UART4_BASE,UART_INT_RX);//|UART_INT_RX
-//		char charData;
-//		while(UARTCharsAvail(UART4_BASE))
-//			charData=(char)UARTCharGet(UART4_BASE);
-//	}
+	//	else if(interrupt_status&UART_INT_RX)
+	//	{
+	//		UARTIntClear(UART4_BASE,UART_INT_RX);//|UART_INT_RX
+	//		char charData;
+	//		while(UARTCharsAvail(UART4_BASE))
+	//			charData=(char)UARTCharGet(UART4_BASE);
+	//	}
 	else if(interrupt_status&(UART_INT_RT|UART_INT_RX))
 	{
 		UARTIntClear(UART4_BASE,UART_INT_RT|UART_INT_RX);
@@ -200,13 +213,22 @@ void UART4_Interrupt_Handler(void)
 		{
 			if(samReadBusy)
 			{
-				samPosition12[samReadCurrentID_C4]=((charData[0]&0x1F)<<7)+(charData[1]&0x7F);
+				switch(samReadMode){
+				case SAMREAD_POS12_:
+					samPosition12[samReadCurrentID_C4]=((charData[0]&0x1F)<<7)+(charData[1]&0x7F);
+					break;
+				case SAMREAD_PD_:
+					samP[samReadCurrentID_C4]=charData[0];
+					samD[samReadCurrentID_C4]=charData[1];
+					break;
+				case SAMREAD_I_:
+					samI[samReadCurrentID_C4]=charData[0];
+					break;
+				default:
+					break;
+				}
 				samDataAvail[samReadCurrentID_C4]=1;
 			}
-			//			a Tan
-			//			samPosition12.s1=((charData[0]&0x1F)<<7)+(charData[1]&0x7F);
-			//			toggle_led[1]^=1;
-			//			led(LED_BLUE,toggle_led[1]);
 		}
 	}
 }

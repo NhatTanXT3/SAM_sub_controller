@@ -28,23 +28,23 @@
 		<link>
 			<name>driverlib.lib</name>
 			<type>1</type>
-			<locationURI>TIVAWARE_INSTALL/driverlib/ccs/Debug/driverlib.lib</locationURI>
+			<locationURI>PARENT-3-TIVAWARE_INSTALL/opt/ti/TivaWare_C_Series-2.1.0.12573/driverlib/ccs/Debug/driverlib.lib</locationURI>
 		</link>
 		<link>
 			<name>ringbuf.c</name>
 			<type>1</type>
-			<locationURI>TIVAWARE_INSTALL/utils/ringbuf.c</locationURI>
+			<locationURI>PARENT-5-PROJECT_LOC/opt/ti/TivaWare_C_Series-2.1.0.12573/utils/ringbuf.c</locationURI>
 		</link>
 		<link>
 			<name>ringbuf.h</name>
 			<type>1</type>
-			<locationURI>TIVAWARE_INSTALL/utils/ringbuf.h</locationURI>
+			<locationURI>PARENT-5-PROJECT_LOC/opt/ti/TivaWare_C_Series-2.1.0.12573/utils/ringbuf.h</locationURI>
 		</link>
 	</linkedResources>
 	<variableList>
 		<variable>
 			<name>TIVAWARE_INSTALL</name>
-			<value>file:/C:/ti/TivaWare_C_Series-2.1.0.12573</value>
+			<value>file:/opt/ti/TivaWare_C_Series-2.1.0.12573</value>
 		</variable>
 	</variableList>
 </projectDescription>

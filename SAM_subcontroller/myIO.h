@@ -15,8 +15,9 @@ void myIO_init();
 #define LED_BLUE	GPIO_PIN_2
 #define ALL_OFF		2
 
-void led(uint8_t led_color,uint8_t state);
-bool button();
+extern void led(uint8_t led_color,uint8_t state);
+extern bool button();
+extern void SAM_Power_enable(uint8_t enable_stt);
 
 extern volatile uint8_t toggle_led[3];
 

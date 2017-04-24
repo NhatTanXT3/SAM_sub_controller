@@ -17,7 +17,7 @@
  * define for hardware
  */
 #define UART_RS485_ID_0_ 	UART_RS485_2_
-#define UART_RS485_ID_1_ 	UART_RS485_4_
+#define UART_RS485_ID_1_ 	UART_RS485_2_
 #define UART_RS485_ID_2_ 	UART_RS485_4_
 #define UART_RS485_ID_3_ 	UART_RS485_4_
 #define UART_RS485_ID_4_ 	UART_RS485_4_

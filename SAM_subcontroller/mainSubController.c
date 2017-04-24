@@ -42,6 +42,7 @@ void display_com();
 void main(){
 	SysCtlClockSet(SYSCTL_SYSDIV_5|SYSCTL_USE_PLL|SYSCTL_OSC_MAIN|SYSCTL_XTAL_16MHZ); //40Mhz
 	myIO_init();
+	SAM_Power_enable(0);
 	led(LED_RED,0);
 	led(LED_BLUE,0);
 	led(LED_GREEN,0);
@@ -60,13 +61,14 @@ void main(){
 	UARTCharPut(UART_PC_,128);
 	SerialPutStrLn(UART_PC_,"config done!");
 	SysCtlDelay(SysCtlClockGet()/300);
-	SerialPutStrLn(UART_PC_,"2");
+	SAM_Power_enable(1);
+//	SerialPutStrLn(UART_PC_,"2");
 	//	char buffer[20];
 	//	int2num((SysCtlClockGet()/1000),buffer);
 	//	SerialPutStrLn(UART_PC_,buffer);
 
 	//	SerialPutStr_NonTer(UART_PC_,"config done2");
-	UARTCharPut(UART_PC_,127);
+//	UARTCharPut(UART_PC_,127);
 
 
 	//	unsigned char test=6;

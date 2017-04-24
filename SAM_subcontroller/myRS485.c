@@ -77,7 +77,7 @@ void RS485_2_Init(){
 	IntEnable(INT_UART2); //enable the UART interrup
 
 	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
-	GPIOPinTypeGPIOOutput(GPIO_PORTA_BASE, GPIO_PIN_2);
+	GPIOPinTypeGPIOOutput(GPIO_PORTA_BASE, GPIO_PIN_4);
 }
 
 void UART2_Interrupt_Handler(void)
@@ -88,7 +88,7 @@ void UART2_Interrupt_Handler(void)
 	if((interrupt_status&UART_INT_TX))
 	{
 		//GPIOPinWrite(GPIO_PORTF_BASE,GPIO_PIN_3,0);
-		GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_2,0);
+		GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_4,0);
 		UARTIntClear(UART2_BASE,UART_INT_TX);
 	}
 	//	else if(interrupt_status&UART_INT_RX)
@@ -176,7 +176,7 @@ void RS485_4_Init(){
 	IntEnable(INT_UART4); //enable the UART interrup
 
 	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
-	GPIOPinTypeGPIOOutput(GPIO_PORTA_BASE, GPIO_PIN_3);
+	GPIOPinTypeGPIOOutput(GPIO_PORTA_BASE, GPIO_PIN_2);
 }
 
 void UART4_Interrupt_Handler(void)
@@ -187,7 +187,7 @@ void UART4_Interrupt_Handler(void)
 	if((interrupt_status&UART_INT_TX))
 	{
 		//		GPIOPinWrite(GPIO_PORTF_BASE,GPIO_PIN_3,0);
-		GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_3,0);
+		GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_2,0);
 		UARTIntClear(UART4_BASE,UART_INT_TX);
 	}
 	//	else if(interrupt_status&UART_INT_RX)

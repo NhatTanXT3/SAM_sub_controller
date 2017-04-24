@@ -143,14 +143,14 @@ void SAM_send_bytes(unsigned char ID, char *data, unsigned char size)
 	switch(ui32Base){
 	case UART_RS485_4_:
 		samReadCurrentID_C4=ID;
-		GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_3,GPIO_PIN_3);
+		GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_2,GPIO_PIN_2);
 		break;
 	case UART_RS485_2_:
 		samReadCurrentID_C2=ID;
-		GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_2,GPIO_PIN_2);
+		GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_4,GPIO_PIN_4);
 		break;
 	case UART_RS485_3_:
-		GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_4,GPIO_PIN_4);
+		GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_3,GPIO_PIN_3);
 		break;
 	default:
 		break;

@@ -23,9 +23,13 @@ void myIO_init()
 	//== config for led
 	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
 	GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3);
+
 	// == for SIGN_COM
-	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
-	GPIOPinTypeGPIOOutput(GPIO_PORTA_BASE, GPIO_PIN_7);
+//	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
+//	GPIOPinTypeGPIOOutput(GPIO_PORTA_BASE, GPIO_PIN_7);
+//
+	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);
+	GPIOPinTypeGPIOOutput(GPIO_PORTD_BASE, GPIO_PIN_3);
 
 
 	//	GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_1|GPIO_PIN_2);
@@ -37,10 +41,15 @@ void myIO_init()
 }
 
 void SAM_Power_enable(uint8_t enable_stt){
+//	if(enable_stt==1)
+//		GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_7,GPIO_PIN_7);
+//	else
+//		GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_7,0);
+
 	if(enable_stt==1)
-		GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_7,GPIO_PIN_7);
-	else
-		GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_7,0);
+			GPIOPinWrite(GPIO_PORTD_BASE,GPIO_PIN_3,GPIO_PIN_3);
+		else
+			GPIOPinWrite(GPIO_PORTD_BASE,GPIO_PIN_3,0);
 }
 
 void led(uint8_t led_color,uint8_t state)

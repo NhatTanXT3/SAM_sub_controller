@@ -62,13 +62,15 @@ void main(){
 	SerialPutStrLn(UART_PC_,"config done!");
 	SysCtlDelay(SysCtlClockGet()/300);
 	SAM_Power_enable(1);
-//	SerialPutStrLn(UART_PC_,"2");
+
+
+	//	SerialPutStrLn(UART_PC_,"2");
 	//	char buffer[20];
 	//	int2num((SysCtlClockGet()/1000),buffer);
 	//	SerialPutStrLn(UART_PC_,buffer);
 
 	//	SerialPutStr_NonTer(UART_PC_,"config done2");
-//	UARTCharPut(UART_PC_,127);
+	//	UARTCharPut(UART_PC_,127);
 
 
 	//	unsigned char test=6;
@@ -168,7 +170,7 @@ void communication(){
 								sam1.mode=serialPC.Command_Data[refIndex]>>5;
 								sam1.SAMmode=((serialPC.Command_Data[refIndex]&0x60)>>5)+((serialPC.Command_Data[refIndex+1]&0x60)>>3);
 								sam1.position12=((serialPC.Command_Data[refIndex+1]&0x1F)<<7)+(serialPC.Command_Data[refIndex+2]&0X7F);
-								SAM_set_jointAngle10bit(sam1.id,sam1.position12);
+								SAM_set_jointAngle12bit(sam1.id,sam1.position12);
 								//							display_com();
 							}
 							else
@@ -191,29 +193,29 @@ void communication(){
 						toggle_led[1]^=1;
 						led(LED_BLUE,toggle_led[1]);
 						samReadCurrentID_C4=1;
-						SAM_get_jointAngle10bit(samReadCurrentID_C4);
+						SAM_get_jointAngle12bit(samReadCurrentID_C4);
 						samReadCurrentID_C2=0;
-						SAM_get_jointAngle10bit(samReadCurrentID_C2);
+						SAM_get_jointAngle12bit(samReadCurrentID_C2);
 						Timer1_Reset();
 
 						while(samReadBusy);
 						samReadBusy=1;
 						samReadCurrentID_C4=2;
-						SAM_get_jointAngle10bit(samReadCurrentID_C4);
+						SAM_get_jointAngle12bit(samReadCurrentID_C4);
 						samReadCurrentID_C2=5;
-						SAM_get_jointAngle10bit(samReadCurrentID_C2);
+						SAM_get_jointAngle12bit(samReadCurrentID_C2);
 						Timer1_Reset();
 
 						while(samReadBusy);
 						samReadBusy=1;
 						samReadCurrentID_C4=3;
-						SAM_get_jointAngle10bit(samReadCurrentID_C4);
+						SAM_get_jointAngle12bit(samReadCurrentID_C4);
 						Timer1_Reset();
 
 						while(samReadBusy);
 						samReadBusy=1;
 						samReadCurrentID_C4=4;
-						SAM_get_jointAngle10bit(samReadCurrentID_C4);
+						SAM_get_jointAngle12bit(samReadCurrentID_C4);
 						Timer1_Reset();
 
 
@@ -328,12 +330,12 @@ void communication(){
 					switch(mode)
 					{
 					case PC_SAM_MODE_0_:
-						//						SerialPutStrLn(UART_PC_,"M0");
+						SerialPutStrLn(UART_PC_,"M0");
 						if(((serialPC.Command_Data[1]^serialPC.Command_Data[2]^serialPC.Command_Data[3])&0x7F)==serialPC.Command_Data[4])
 						{
 							sam1.mode=PC_SAM_MODE_0_;
-							sam1.position12=((serialPC.Command_Data[2]&0x1F)<<7)+(serialPC.Command_Data[3]&0X7F);
-							SAM_set_jointAngle10bit(sam1.id,sam1.position12);
+							sam1.position8=((serialPC.Command_Data[2]&0x01)<<7)+(serialPC.Command_Data[3]&0X7F);
+							SAM_set_jointAngle8bit(sam1.id,sam1.mode,sam1.position8);
 						}
 						else
 						{
@@ -345,8 +347,8 @@ void communication(){
 						if(((serialPC.Command_Data[1]^serialPC.Command_Data[2]^serialPC.Command_Data[3])&0x7F)==serialPC.Command_Data[4])
 						{
 							sam1.mode=PC_SAM_MODE_1_;
-							sam1.position12=((serialPC.Command_Data[2]&0x1F)<<7)+(serialPC.Command_Data[3]&0X7F);
-							SAM_set_jointAngle10bit(sam1.id,sam1.position12);
+							sam1.position8=((serialPC.Command_Data[2]&0x01)<<7)+(serialPC.Command_Data[3]&0X7F);
+							SAM_set_jointAngle8bit(sam1.id,sam1.mode,sam1.position8);
 						}
 						else
 						{
@@ -358,8 +360,8 @@ void communication(){
 						if(((serialPC.Command_Data[1]^serialPC.Command_Data[2]^serialPC.Command_Data[3])&0x7F)==serialPC.Command_Data[4])
 						{
 							sam1.mode=PC_SAM_MODE_2_;
-							sam1.position12=((serialPC.Command_Data[2]&0x1F)<<7)+(serialPC.Command_Data[3]&0X7F);
-							SAM_set_jointAngle10bit(sam1.id,sam1.position12);
+							sam1.position8=((serialPC.Command_Data[2]&0x01)<<7)+(serialPC.Command_Data[3]&0X7F);
+							SAM_set_jointAngle8bit(sam1.id,sam1.mode,sam1.position8);
 						}
 						else
 						{
@@ -371,8 +373,8 @@ void communication(){
 						if(((serialPC.Command_Data[1]^serialPC.Command_Data[2]^serialPC.Command_Data[3])&0x7F)==serialPC.Command_Data[4])
 						{
 							sam1.mode=PC_SAM_MODE_3_;
-							sam1.position12=((serialPC.Command_Data[2]&0x1F)<<7)+(serialPC.Command_Data[3]&0X7F);
-							SAM_set_jointAngle10bit(sam1.id,sam1.position12);
+							sam1.position8=((serialPC.Command_Data[2]&0x01)<<7)+(serialPC.Command_Data[3]&0X7F);
+							SAM_set_jointAngle8bit(sam1.id,sam1.mode,sam1.position8);
 						}
 						else
 						{
@@ -384,29 +386,40 @@ void communication(){
 						if(((serialPC.Command_Data[1]^serialPC.Command_Data[2]^serialPC.Command_Data[3])&0x7F)==serialPC.Command_Data[4])
 						{
 							sam1.mode=PC_SAM_MODE_4_;
-							sam1.position12=((serialPC.Command_Data[2]&0x1F)<<7)+(serialPC.Command_Data[3]&0X7F);
-							SAM_set_jointAngle10bit(sam1.id,sam1.position12);
+							sam1.position8=((serialPC.Command_Data[2]&0x01)<<7)+(serialPC.Command_Data[3]&0X7F);
+							SAM_set_jointAngle8bit(sam1.id,sam1.mode,sam1.position8);
 						}
 						else
 						{
 							SerialPutStrLn(UART_PC_,"e_cs");
 						}
 						break;
-					case PC_SAM_MODE_5_:
-						//						SerialPutStrLn(UART_PC_,"M2");
+					case PC_SAM_MODE_6_:
+						SerialPutStrLn(UART_PC_,"M6"); // check if it have feedback or not.
+						if(((serialPC.Command_Data[1]^serialPC.Command_Data[2]^serialPC.Command_Data[3])&0x7F)==serialPC.Command_Data[4])
+						{
+							SAM_set_passiveMode(sam1.id);
+						}
+						else
+						{
+							SerialPutStrLn(UART_PC_,"e_cs");
+						}
+						break;
+					case PC_SAM_MODE_7_:
+						SerialPutStrLn(UART_PC_,"M7");
 
 						while(samReadBusy);
 						samReadBusy=1;
-						//						samReadCurrentID_C4=sam1.id;
-						SAM_get_jointAngle10bit(sam1.id);
+						samReadCurrentID_C4=sam1.id;
+						SAM_get_jointAngle12bit(samReadCurrentID_C4);
 						Timer1_Reset();
 
 						while(samReadBusy);
 
-						if(samDataAvail[sam1.id])
+						if(samDataAvail[samReadCurrentID_C4])
 						{
-							samDataAvail[sam1.id]=0;
-							SerialSend_1_Position(UART_PC_,sam1.id,samPosition12[sam1.id]);
+							samDataAvail[samReadCurrentID_C4]=0;
+							SerialSend_1_Position(UART_PC_,samReadCurrentID_C4,samPosition12[sam1.id]);
 						}
 						else
 						{
@@ -414,7 +427,18 @@ void communication(){
 						}
 
 						break;
-
+					case PC_SAM_MODE_8_:
+						SerialPutStrLn(UART_PC_,"M8");
+						if(((serialPC.Command_Data[1]^serialPC.Command_Data[2]^serialPC.Command_Data[3])&0x7F)==serialPC.Command_Data[4])
+						{
+							sam1.position12=((serialPC.Command_Data[2]&0x1F)<<7)+(serialPC.Command_Data[3]&0X7F);
+							SAM_set_jointAngle12bit(sam1.id,sam1.position12);
+						}
+						else
+						{
+							SerialPutStrLn(UART_PC_,"e_cs");
+						}
+						break;
 					default:
 						SerialPutStrLn(UART_PC_,"M?");
 						break;

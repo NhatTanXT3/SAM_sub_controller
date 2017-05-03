@@ -23,6 +23,9 @@
 #define PC_SAM_MODE_3_ 3
 #define PC_SAM_MODE_4_ 4
 #define PC_SAM_MODE_5_ 5
+#define PC_SAM_MODE_6_ 6
+#define PC_SAM_MODE_7_ 7
+#define PC_SAM_MODE_8_ 8
 
 #define PC_SAM_MODE_1_DATALENGTH_ 6
 #define PC_SAM_MODE_2_DATALENGTH_

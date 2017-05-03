@@ -34,7 +34,7 @@ volatile unsigned char samReadCurrentID_C4;
 volatile unsigned char samReadCurrentID_C2;
 //RS485_Channel_State channel_1, channel_2, channel3;
 
-SAM sam1;
+//SAM sam1;
 
 //FlagDataAvailSAM flagDataAvailSAM;
 ////FlagBusySAM flagBusySAM;
@@ -143,11 +143,11 @@ void SAM_send_bytes(unsigned char ID, char *data, unsigned char size)
 	switch(ui32Base){
 	case UART_RS485_4_:
 		samReadCurrentID_C4=ID;
-		GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_2,GPIO_PIN_2);
+		GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_3,GPIO_PIN_3);
 		break;
 	case UART_RS485_2_:
 		samReadCurrentID_C2=ID;
-		GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_4,GPIO_PIN_4);
+		GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_2,GPIO_PIN_2);
 		break;
 	case UART_RS485_3_:
 		GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_3,GPIO_PIN_3);
@@ -170,6 +170,7 @@ void SAM_send_bytes(unsigned char ID, char *data, unsigned char size)
 
 
 void SAM_set_PD_Runtime(unsigned char ID, unsigned char P, unsigned char D){
+	samReadMode=SAMREAD_PD_;
 	char data[7];
 	data[0]=0xFF;
 	data[1]=0xE0;
@@ -183,6 +184,7 @@ void SAM_set_PD_Runtime(unsigned char ID, unsigned char P, unsigned char D){
 }
 
 void SAM_set_I_Runtime(unsigned char ID, unsigned char I){
+	samReadMode=SAMREAD_I_;
 	char data[7];
 	data[0]=0xFF;
 	data[1]=0xE0;
@@ -220,7 +222,7 @@ void SAM_get_I(unsigned char ID){
 }
 
 
-void SAM_get_jointAngle10bit(unsigned char ID){
+void SAM_get_jointAngle12bit(unsigned char ID){
 	samReadMode=SAMREAD_POS12_;
 	char data[7];
 	data[0]=0xFF;
@@ -235,8 +237,8 @@ void SAM_get_jointAngle10bit(unsigned char ID){
 	SAM_send_bytes(ID,data,7);
 }
 
-void SAM_set_jointAngle10bit(unsigned char ID,unsigned int value){
-	if((value>=LOWER_10BIT_BOUNDARY_)&&(value<=UPPER_10BIT_BOUNDARY_))
+void SAM_set_jointAngle12bit(unsigned char ID,unsigned int value){
+	if((value>=LOWER_12BIT_BOUNDARY_)&&(value<=UPPER_12BIT_BOUNDARY_))
 	{
 		char data[7];
 		data[0]=0xFF;
@@ -254,7 +256,7 @@ void SAM_set_jointAngle10bit(unsigned char ID,unsigned int value){
 	}
 }
 
-void SAM_get_jointAngle8bit(uint32_t ui32Base,unsigned char ID)
+void SAM_get_jointAngle8bit(unsigned char ID)
 {
 	samReadMode=SAMREAD_POS8_;
 	char data[4];
@@ -267,14 +269,26 @@ void SAM_get_jointAngle8bit(uint32_t ui32Base,unsigned char ID)
 	SAM_send_bytes(ID,data,4);
 }
 
-void SAM_set_jointAngle8bit(uint32_t ui32Base,unsigned char ID,unsigned char value)
+void SAM_set_jointAngle8bit(unsigned char ID,unsigned char Mode, unsigned char value)
 {
+	if(Mode>4)
+		Mode=4;
 	char data[4];
 	data[0]=0xFF;
-	data[1]=(4<<5)|(ID);
+	data[1]=(Mode<<5)|(ID);
 	data[2]=value;
 	data[3]=(data[1]^data[2])&0x7F;
 
 	SAM_send_bytes(ID,data,4);
 }
 
+void SAM_set_passiveMode(unsigned char ID)
+{
+	char data[4];
+	data[0]=0xFF;
+	data[1]=(6<<5)|(ID);
+	data[2]=16;
+	data[3]=(data[1]^data[2])&0x7F;
+
+	SAM_send_bytes(ID,data,4);
+}

@@ -54,6 +54,7 @@ void main(){
 
 	RS485_4_Init();
 	RS485_2_Init();
+	RS485_1_Init();
 
 	UART5_Init();
 
@@ -393,7 +394,7 @@ void communication(){
 						}
 						break;
 					case PC_SAM_MODE_5_:
-						//						SerialPutStrLn(UART_PC_,"M2");
+//						SerialPutStrLn(UART_PC_,"M5");
 
 						while(samReadBusy);
 						samReadBusy=1;

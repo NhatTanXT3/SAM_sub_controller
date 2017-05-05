@@ -16,13 +16,13 @@
 /*
  * define for hardware
  */
-#define UART_RS485_ID_0_ 	UART_RS485_2_
-#define UART_RS485_ID_1_ 	UART_RS485_2_
-#define UART_RS485_ID_2_ 	UART_RS485_4_
+#define UART_RS485_ID_0_ 	UART_RS485_1_
+#define UART_RS485_ID_1_ 	UART_RS485_4_
+#define UART_RS485_ID_2_ 	UART_RS485_2_
 #define UART_RS485_ID_3_ 	UART_RS485_4_
-#define UART_RS485_ID_4_ 	UART_RS485_4_
-#define UART_RS485_ID_5_ 	UART_RS485_2_
-#define UART_RS485_ID_6_ UART_RS485_4_
+#define UART_RS485_ID_4_ 	UART_RS485_1_
+#define UART_RS485_ID_5_ 	UART_RS485_4_
+#define UART_RS485_ID_6_ UART_RS485_2_
 #define UART_RS485_ID_7_ UART_RS485_4_
 #define UART_RS485_ID_8_ UART_RS485_4_
 #define UART_RS485_ID_9_ UART_RS485_4_
@@ -81,6 +81,7 @@ extern volatile unsigned char samI[];
 extern volatile unsigned char samD[];
 extern volatile unsigned char samReadCurrentID_C4;
 extern volatile unsigned char samReadCurrentID_C2;
+extern volatile unsigned char samReadCurrentID_C1;
 extern SAM sam1;
 
 extern void SAM_set_PD_Runtime(unsigned char ID, unsigned char P, unsigned char D);

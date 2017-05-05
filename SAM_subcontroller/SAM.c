@@ -32,6 +32,7 @@ unsigned char samReadMode;
 
 volatile unsigned char samReadCurrentID_C4;
 volatile unsigned char samReadCurrentID_C2;
+volatile unsigned char samReadCurrentID_C1;
 //RS485_Channel_State channel_1, channel_2, channel3;
 
 SAM sam1;
@@ -149,8 +150,9 @@ void SAM_send_bytes(unsigned char ID, char *data, unsigned char size)
 		samReadCurrentID_C2=ID;
 		GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_4,GPIO_PIN_4);
 		break;
-	case UART_RS485_3_:
-		GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_3,GPIO_PIN_3);
+	case UART_RS485_1_:
+	    samReadCurrentID_C1=ID;
+		GPIOPinWrite(GPIO_PORTB_BASE,GPIO_PIN_7,GPIO_PIN_7);
 		break;
 	default:
 		break;

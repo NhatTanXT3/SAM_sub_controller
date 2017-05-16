@@ -200,22 +200,34 @@ void communication(){
 
 						while(samReadBusy);
 						samReadBusy=1;
-						samReadCurrentID_C4=2;
+						samReadCurrentID_C4=3;
 						SAM_get_jointAngle12bit(samReadCurrentID_C4);
-						samReadCurrentID_C2=5;
+						samReadCurrentID_C2=2;
 						SAM_get_jointAngle12bit(samReadCurrentID_C2);
 						Timer1_Reset();
 
 						while(samReadBusy);
 						samReadBusy=1;
-						samReadCurrentID_C4=3;
+						samReadCurrentID_C4=5;
 						SAM_get_jointAngle12bit(samReadCurrentID_C4);
+						samReadCurrentID_C2=4;
+						SAM_get_jointAngle12bit(samReadCurrentID_C2);
 						Timer1_Reset();
 
 						while(samReadBusy);
 						samReadBusy=1;
-						samReadCurrentID_C4=4;
+						samReadCurrentID_C4=7;
 						SAM_get_jointAngle12bit(samReadCurrentID_C4);
+						samReadCurrentID_C2=6;
+						SAM_get_jointAngle12bit(samReadCurrentID_C2);
+						Timer1_Reset();
+
+						while(samReadBusy);
+						samReadBusy=1;
+						samReadCurrentID_C4=9;
+						SAM_get_jointAngle12bit(samReadCurrentID_C4);
+						samReadCurrentID_C2=8;
+						SAM_get_jointAngle12bit(samReadCurrentID_C2);
 						Timer1_Reset();
 
 
@@ -318,6 +330,76 @@ void communication(){
 						SerialPutStrLn(UART_PC_,"e_l");
 					}
 					break;
+
+				case PC_SAM_SP_MODE_5_:
+					SerialPutStrLn(UART_PC_,"sm5");
+					if(serialPC.dataIndex==3){//check length of data
+						while(samReadBusy);
+						samReadBusy=1;
+						toggle_led[1]^=1;
+						led(LED_BLUE,toggle_led[1]);
+						samReadCurrentID_C4=1;
+						SAM_get_jointAngle8bit(samReadCurrentID_C4);
+						samReadCurrentID_C2=0;
+						SAM_get_jointAngle8bit(samReadCurrentID_C2);
+						Timer1_Reset();
+
+						while(samReadBusy);
+						samReadBusy=1;
+						samReadCurrentID_C4=3;
+						SAM_get_jointAngle8bit(samReadCurrentID_C4);
+						samReadCurrentID_C2=2;
+						SAM_get_jointAngle8bit(samReadCurrentID_C2);
+						Timer1_Reset();
+
+						while(samReadBusy);
+						samReadBusy=1;
+						samReadCurrentID_C4=5;
+						SAM_get_jointAngle8bit(samReadCurrentID_C4);
+						samReadCurrentID_C2=4;
+						SAM_get_jointAngle8bit(samReadCurrentID_C2);
+						Timer1_Reset();
+
+						while(samReadBusy);
+						samReadBusy=1;
+						samReadCurrentID_C4=7;
+						SAM_get_jointAngle8bit(samReadCurrentID_C4);
+						samReadCurrentID_C2=6;
+						SAM_get_jointAngle8bit(samReadCurrentID_C2);
+						Timer1_Reset();
+
+						while(samReadBusy);
+						samReadBusy=1;
+						samReadCurrentID_C4=9;
+						SAM_get_jointAngle8bit(samReadCurrentID_C4);
+						samReadCurrentID_C2=8;
+						SAM_get_jointAngle8bit(samReadCurrentID_C2);
+						Timer1_Reset();
+
+
+						while(samReadBusy);
+						unsigned char i;
+						unsigned char refIndex=2;
+						dataSendBuffer[0]=MCU2PC_HEADER_;
+						dataSendBuffer[1]=PC_SAM_SP_MODE_5_;
+						for (i=0;i<NUM_OF_SAM_;i++)
+						{
+							if(samDataAvail[i])
+							{
+								samDataAvail[i]=0;
+								dataSendBuffer[refIndex++]=((samLoad8[i]&0x80)>>1)+((samPosition8[i]&0x80)>>2)+(i&0x1F);
+								dataSendBuffer[refIndex++]=samLoad8[i]&0x7F;
+								dataSendBuffer[refIndex++]=samPosition8[i]&0x7F;
+								dataSendBuffer[refIndex++]=(dataSendBuffer[refIndex-3]^dataSendBuffer[refIndex-2]^dataSendBuffer[refIndex-1])&0x7F;
+							}
+						}
+						dataSendBuffer[refIndex]=MCU2PC_TERMINATOR_;
+						SerialSendData(UART_PC_,dataSendBuffer);
+					}
+					else{
+						SerialPutStrLn(UART_PC_,"e_l_3");
+					}
+					break;
 				default:
 					break;
 				}
@@ -325,7 +407,7 @@ void communication(){
 			else{
 				if(serialPC.dataIndex==PC_SAM_MODE_1_DATALENGTH_)
 				{
-					unsigned char mode=((serialPC.Command_Data[1]&0x60)>>5)+((serialPC.Command_Data[2]&0x60)>>3);
+					unsigned char mode=((serialPC.Command_Data[1]&0x60)>>3)+((serialPC.Command_Data[2]&0x60)>>5);
 					sam1.id=serialPC.Command_Data[1]&0x1F;
 					switch(mode)
 					{
@@ -394,6 +476,28 @@ void communication(){
 							SerialPutStrLn(UART_PC_,"e_cs");
 						}
 						break;
+
+					case PC_SAM_MODE_5_:
+						SerialPutStrLn(UART_PC_,"M5");
+						while(samReadBusy);
+						samReadBusy=1;
+						samReadCurrentID_C4=sam1.id;
+						SAM_get_jointAngle8bit(samReadCurrentID_C4);
+						Timer1_Reset();
+
+						while(samReadBusy);
+
+						if(samDataAvail[samReadCurrentID_C4])
+						{
+							samDataAvail[samReadCurrentID_C4]=0;
+							SerialSend_1_Position8(UART_PC_,sam1.id,samPosition8[sam1.id],samLoad8[sam1.id]);
+						}
+						else
+						{
+							SerialPutStrLn(UART_PC_,"idNA");
+						}
+
+						break;
 					case PC_SAM_MODE_6_:
 						SerialPutStrLn(UART_PC_,"M6"); // check if it have feedback or not.
 						if(((serialPC.Command_Data[1]^serialPC.Command_Data[2]^serialPC.Command_Data[3])&0x7F)==serialPC.Command_Data[4])
@@ -419,7 +523,7 @@ void communication(){
 						if(samDataAvail[samReadCurrentID_C4])
 						{
 							samDataAvail[samReadCurrentID_C4]=0;
-							SerialSend_1_Position(UART_PC_,samReadCurrentID_C4,samPosition12[sam1.id]);
+							SerialSend_1_Position12(UART_PC_,samReadCurrentID_C4,samPosition12[sam1.id]);
 						}
 						else
 						{

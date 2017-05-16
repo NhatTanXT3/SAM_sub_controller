@@ -173,7 +173,7 @@ void SerialSendData(uint32_t ui32Base,unsigned char *uart_str)
 	UARTCharPut(ui32Base,MCU2PC_TERMINATOR_);
 }
 
-void SerialSend_1_Position(uint32_t ui32Base,unsigned char ID,unsigned int value){
+void SerialSend_1_Position12(uint32_t ui32Base,unsigned char ID,unsigned int value){
 	unsigned char data[6];
 	data[0]=MCU2PC_HEADER_;
 	data[1]=ID&0x1F;
@@ -181,6 +181,18 @@ void SerialSend_1_Position(uint32_t ui32Base,unsigned char ID,unsigned int value
 	data[3]=(unsigned char)(value&0x7F); //target position: lower 7 bits
 	data[4]=(data[1]^data[2]^data[3])&0x7F;//check sum
 	data[5]=MCU2PC_TERMINATOR_;
+	SerialSendData(ui32Base,data);
+}
+
+void SerialSend_1_Position8(uint32_t ui32Base,unsigned char ID,unsigned char pos,unsigned char load){
+	unsigned char data[7];
+	data[0]=MCU2PC_HEADER_;
+	data[1]=MCU2PC_MODE_1_;
+	data[2]=((load&0x08)>>1)+((pos&0x80)>>2)+(ID&0x1F);
+	data[3]=load&0x7F; // target position: upper 5bits
+	data[4]=pos&0x7F; //target position: lower 7 bits
+	data[5]=(data[1]^data[2]^data[3]^data[4])&0x7F;//check sum
+	data[6]=MCU2PC_TERMINATOR_;
 	SerialSendData(ui32Base,data);
 }
 void SerialSend_All_Position(uint32_t ui32Base,unsigned char ID,unsigned int *SamPos){

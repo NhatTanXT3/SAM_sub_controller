@@ -113,6 +113,10 @@ void UART2_Interrupt_Handler(void)
 			if(samReadBusy)
 			{
 				switch(samReadMode){
+				case SAMREAD_POS8_:
+					samLoad8[samReadCurrentID_C2]=(unsigned char)charData[0];
+					samPosition8[samReadCurrentID_C2]=(unsigned char)charData[1];
+					break;
 				case SAMREAD_POS12_:
 					samPosition12[samReadCurrentID_C2]=((charData[0]&0x1F)<<7)+(charData[1]&0x7F);
 					break;
@@ -161,7 +165,7 @@ void RS485_4_Init(){
 
 	UARTEnable(UART4_BASE);
 	//	IntPrioritySet(INT_UART5,0xE0);
-//	IntPrioritySet(INT_UART4,0);
+	//	IntPrioritySet(INT_UART4,0);
 
 
 
@@ -209,6 +213,10 @@ void UART4_Interrupt_Handler(void)
 			if(samReadBusy)
 			{
 				switch(samReadMode){
+				case SAMREAD_POS8_:
+					samLoad8[samReadCurrentID_C4]=(unsigned char)charData[0];
+					samPosition8[samReadCurrentID_C4]=(unsigned char)charData[1];
+					break;
 				case SAMREAD_POS12_:
 					samPosition12[samReadCurrentID_C4]=((charData[0]&0x1F)<<7)+(charData[1]&0x7F);
 					break;

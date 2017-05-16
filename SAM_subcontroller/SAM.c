@@ -23,6 +23,8 @@
 
 SAM sam1;
 volatile unsigned int samPosition12[24];
+volatile unsigned char samPosition8[24];
+volatile unsigned char samLoad8[24];
 volatile unsigned char samDataAvail[24];
 volatile unsigned char samP[24];
 volatile unsigned char samI[24];
@@ -30,6 +32,7 @@ volatile unsigned char samD[24];
 volatile unsigned char  samReadBusy;
 unsigned char samReadMode;
 
+// use this variable care fully, this variable for transparent of hardware
 volatile unsigned char samReadCurrentID_C4;
 volatile unsigned char samReadCurrentID_C2;
 //RS485_Channel_State channel_1, channel_2, channel3;
@@ -262,10 +265,8 @@ void SAM_get_jointAngle8bit(unsigned char ID)
 	char data[4];
 	data[0]=0xFF;
 	data[1]=(5<<5)|(ID);
-	//			0x22;
 	data[2]=0;
 	data[3]=(data[1]^data[2])&0x7F;
-
 	SAM_send_bytes(ID,data,4);
 }
 

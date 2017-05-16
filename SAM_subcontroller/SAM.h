@@ -76,6 +76,8 @@ extern volatile unsigned char samReadBusy;
 extern unsigned char samReadMode;
 extern volatile unsigned int samPosition12[];
 extern volatile unsigned char samDataAvail[];
+extern volatile unsigned char samPosition8[];
+extern volatile unsigned char samLoad8[];
 extern volatile unsigned char samP[];
 extern volatile unsigned char samI[];
 extern volatile unsigned char samD[];

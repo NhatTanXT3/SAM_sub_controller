@@ -198,6 +198,17 @@ void SerialSend_1_Position12(uint32_t ui32Base,unsigned char ID,unsigned int val
     data[5]=MCU2PC_TERMINATOR_;
     SerialSendData(ui32Base,data);
 }
+void SerialSend_1_AverageTorq(uint32_t ui32Base,unsigned char ID,unsigned int value){
+    unsigned char data[6];
+    unsigned char Mode=10;
+        data[0]=MCU2PC_HEADER_;
+        data[1]=(ID&0x1F)+((Mode&0x0C)<<3);
+        data[2]=(unsigned char)((value>>7)&0x1F)+((Mode&0x03)<<5); // target position: upper 5bits
+        data[3]=(unsigned char)(value&0x7F); //target position: lower 7 bits
+        data[4]=(data[1]^data[2]^data[3])&0x7F;//check sum
+        data[5]=MCU2PC_TERMINATOR_;
+        SerialSendData(ui32Base,data);
+}
 
 void SerialSend_1_Position8(uint32_t ui32Base,unsigned char ID,unsigned char pos,unsigned char load){
     unsigned char data[7];

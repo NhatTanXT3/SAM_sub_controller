@@ -223,6 +223,9 @@ void UART2_Interrupt_Handler(void)
                 case SAMREAD_I_:
                     samI[samReadCurrentID_C2]=charData[0];
                     break;
+                case SAMREAD_AVRG_TORQUE_:
+                    samAverageTorq[samReadCurrentID_C2]=((charData[0]&0x1F)<<7)+(charData[1]&0x7F);
+                    break;
                 default:
                     break;
                 }
@@ -332,6 +335,9 @@ void UART4_Interrupt_Handler(void)
                 case SAMREAD_I_:
                     samI[samReadCurrentID_C4]=charData[0];
                     break;
+                case SAMREAD_AVRG_TORQUE_:
+                    samAverageTorq[samReadCurrentID_C4]=((charData[0]&0x1F)<<7)+(charData[1]&0x7F);
+                    break;
                 default:
                     break;
                 }
@@ -396,31 +402,31 @@ void UART3_Interrupt_Handler(void)
         //        GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_4,0);
         UARTIntClear(UART3_BASE,UART_INT_TX);
     }
-//    else if(interrupt_status&UART_INT_RX)
-//    {
-//        UARTIntClear(UART3_BASE,UART_INT_RX);//|UART_INT_RX
-//        char charData;
-//        while(UARTCharsAvail(UART3_BASE))
-//            charData=(char)UARTCharGet(UART3_BASE);
-//    }
-//    else if(interrupt_status&UART_INT_RT)
-//    {
-//        UARTIntClear(UART3_BASE,UART_INT_RT);
-//
-//        char charData[3];
-//        unsigned char dataCount=0;
-//        unsigned int UART3_data=0;
-//        while(UARTCharsAvail(UART3_BASE))
-//        {
-//            charData[dataCount]=(char)UARTCharGet(UART3_BASE);
-//            dataCount++;
-//        }
-//        if(dataCount==2)
-//        {
-//            UART3_data=((charData[0]&0x1F)<<7)+(charData[1]&0x7F);
-//
-//        }
-//    }
+    //    else if(interrupt_status&UART_INT_RX)
+    //    {
+    //        UARTIntClear(UART3_BASE,UART_INT_RX);//|UART_INT_RX
+    //        char charData;
+    //        while(UARTCharsAvail(UART3_BASE))
+    //            charData=(char)UARTCharGet(UART3_BASE);
+    //    }
+    //    else if(interrupt_status&UART_INT_RT)
+    //    {
+    //        UARTIntClear(UART3_BASE,UART_INT_RT);
+    //
+    //        char charData[3];
+    //        unsigned char dataCount=0;
+    //        unsigned int UART3_data=0;
+    //        while(UARTCharsAvail(UART3_BASE))
+    //        {
+    //            charData[dataCount]=(char)UARTCharGet(UART3_BASE);
+    //            dataCount++;
+    //        }
+    //        if(dataCount==2)
+    //        {
+    //            UART3_data=((charData[0]&0x1F)<<7)+(charData[1]&0x7F);
+    //
+    //        }
+    //    }
     else if(interrupt_status&(UART_INT_RT|UART_INT_RX))
     {
         UARTIntClear(UART3_BASE,UART_INT_RT|UART_INT_RX);
@@ -451,6 +457,9 @@ void UART3_Interrupt_Handler(void)
                     break;
                 case SAMREAD_I_:
                     samI[samReadCurrentID_C3]=charData[0];
+                    break;
+                case SAMREAD_AVRG_TORQUE_:
+                    samAverageTorq[samReadCurrentID_C3]=((charData[0]&0x1F)<<7)+(charData[1]&0x7F);
                     break;
                 default:
                     break;

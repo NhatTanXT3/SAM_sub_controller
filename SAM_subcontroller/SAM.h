@@ -54,6 +54,7 @@ typedef struct {
     unsigned char P;
     unsigned char I;
     unsigned char D;
+    unsigned int averageTorq;
 } SAM;
 
 //typedef volatile struct {
@@ -71,10 +72,12 @@ typedef struct {
 #define SAMREAD_PD_     1
 #define SAMREAD_I_      2
 #define SAMREAD_POS8_   3
+#define SAMREAD_AVRG_TORQUE_   4
 
 extern volatile unsigned char samReadBusy;
 extern unsigned char samReadMode;
 extern volatile unsigned int samPosition12[];
+extern volatile unsigned int samAverageTorq[];
 extern volatile unsigned char samDataAvail[];
 extern volatile unsigned char samPosition8[];
 extern volatile unsigned char samLoad8[];
@@ -91,6 +94,7 @@ extern void SAM_set_PD_Runtime(unsigned char ID, unsigned char P, unsigned char 
 extern void SAM_set_I_Runtime(unsigned char ID, unsigned char I);
 extern void SAM_get_PD(unsigned char ID);
 extern void SAM_get_I(unsigned char ID);
+extern void SAM_set_PD_RuntimeQuick(unsigned char ID, unsigned char P, unsigned char D);
 
 extern void SAM_get_jointAngle12bit(unsigned char ID);
 extern void SAM_set_jointAngle12bit(unsigned char ID,unsigned int value);
@@ -98,5 +102,8 @@ extern void SAM_get_jointAngle8bit(unsigned char ID);
 extern void SAM_set_jointAngle8bit(unsigned char ID,unsigned char Mode,unsigned char value);
 
 extern void SAM_set_passiveMode(unsigned char ID);
+
+extern void SAM_set_avergTorque(unsigned char ID,unsigned int value);
+extern void SAM_get_avergTorque(unsigned char ID);
 
 #endif /* SAM_H_ */

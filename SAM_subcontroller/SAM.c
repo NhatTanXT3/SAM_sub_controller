@@ -23,6 +23,7 @@
 
 SAM sam1;
 volatile unsigned int samPosition12[24];
+volatile unsigned int samAverageTorq[24];
 volatile unsigned char samPosition8[24];
 volatile unsigned char samLoad8[24];
 volatile unsigned char samDataAvail[24];
@@ -148,12 +149,12 @@ void SAM_send_bytes(unsigned char ID, char *data, unsigned char size)
     switch(ui32Base){
     case UART_RS485_4_:
         samReadCurrentID_C4=ID;
-//        GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_3,GPIO_PIN_3);
+        //        GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_3,GPIO_PIN_3);
         GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_4,GPIO_PIN_4);
         break;
     case UART_RS485_2_:
         samReadCurrentID_C2=ID;
-//        GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_2,GPIO_PIN_2);
+        //        GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_2,GPIO_PIN_2);
         GPIOPinWrite(GPIO_PORTB_BASE,GPIO_PIN_7,GPIO_PIN_7);
         break;
     case UART_RS485_3_:
@@ -176,7 +177,41 @@ void SAM_send_bytes(unsigned char ID, char *data, unsigned char size)
     //  else if(size==4)
 }
 
-
+void SAM_set_avergTorque(unsigned char ID,unsigned int value){
+    samReadMode=SAMREAD_AVRG_TORQUE_;
+    char data[7];
+    data[0]=0xFF;
+    data[1]=0xE0;
+    data[2]=186;
+    data[3]=ID;
+    data[4]=value>>7;
+    data[5]=value&0x7F;
+    data[6]=(data[1]^data[2]^data[3]^data[4]^data[5])&0x7F;
+    SAM_send_bytes(ID,data,7);
+}
+void SAM_get_avergTorque(unsigned char ID){
+    samReadMode=SAMREAD_AVRG_TORQUE_;
+    char data[7];
+    data[0]=0xFF;
+    data[1]=0xE0;
+    data[2]=187;
+    data[3]=ID;
+    data[4]=0;
+    data[5]=0;
+    data[6]=(data[1]^data[2]^data[3]^data[4]^data[5])&0x7F;
+    SAM_send_bytes(ID,data,7);
+}
+void SAM_set_PD_RuntimeQuick(unsigned char ID, unsigned char P, unsigned char D){
+    samReadMode=SAMREAD_PD_;
+    char data[7];
+    data[0]=0xFF;
+    data[1]=(7<<5)+ID;
+    data[2]=0x0B;
+    data[3]=P;
+    data[4]=D;
+    data[5]=(data[1]^data[2]^data[3]^data[4])&0x7F;
+    SAM_send_bytes(ID,data,6);
+}
 void SAM_set_PD_Runtime(unsigned char ID, unsigned char P, unsigned char D){
     samReadMode=SAMREAD_PD_;
     char data[7];

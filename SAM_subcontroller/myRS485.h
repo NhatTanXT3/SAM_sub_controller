@@ -14,7 +14,7 @@
 
 
 extern void RS485_4_Init();
-extern void RS485_3_Init();
+extern void RS485_1_Init();
 extern void RS485_2_Init();
 
 

@@ -97,60 +97,60 @@ void  UART6_Interrupt_Handler(void)
 #endif
 }
 
-void UART1_Interrupt_Handler(void)
-{
-#ifndef USE_FIFO_UART_
-	//	UARTIntClear(UART1_BASE,UART_INT_RT|UART_INT_RX);//|UART_INT_RX
-	//	SerialGetStr(UART1_BASE,Uart.Command_Data);
-	//	Uart.Flag_receive=1;
-	uint32_t interrupt_status;
-	interrupt_status=UARTIntStatus(UART1_BASE,true);
-	interrupt_status=UARTIntStatus(UART1_BASE,true);
-	if((((interrupt_status&UART_INT_RT)==UART_INT_RT)|((interrupt_status&UART_INT_RX)==UART_INT_RX))==1)
-	{
-		interrupt_status=UARTIntStatus(UART1_BASE,true);
-		UARTIntClear(UART1_BASE,UART_INT_RT|UART_INT_RX);//|UART_INT_RX
-		SerialGetStr(UART1_BASE,Uart.Command_Data);
-		Uart.Flag_receive=1;
-	}
-#else
-	// return: true-the masked interrupt status | false -the current interrupt status
-	uint32_t interrupt_status;
-	interrupt_status=UARTIntStatus(UART1_BASE,true);
-
-	if((((interrupt_status&UART_INT_RT)==UART_INT_RT)|((interrupt_status&UART_INT_RX)==UART_INT_RX))==1)
-	{
-		UARTIntClear(UART1_BASE,UART_INT_RT|UART_INT_RX);//|UART_INT_RX
-		unsigned char flag_valid_data=0;
-		char charData;
-
-		while(UARTCharsAvail(UART1_BASE))
-		{
-			charData=(char)UARTCharGet(UART1_BASE);
-			if(charData==COM_TERMINATOR_)
-			{
-				flag_valid_data=1;
-				FIFO_Rx_CharPut(&communicationFIFO,STR_TERMINATOR_);
-			}
-			else
-				FIFO_Rx_CharPut(&communicationFIFO,charData);
-		}
-
-		if(flag_valid_data==1)
-		{
-			flag_valid_data=0;
-			FIFO_Rx_StrGet(&communicationFIFO,Uart.Command_Data);
-			Uart.Flag_receive=1;
-		}
-	}
-
-	else if((interrupt_status&UART_INT_TX)==UART_INT_TX)
-	{
-		UARTIntClear(UART1_BASE,UART_INT_TX);
-		update_hardwareFIFO(&communicationFIFO,UART1_BASE);
-	}
-#endif
-}
+//void UART1_Interrupt_Handler(void)
+//{
+//#ifndef USE_FIFO_UART_
+//	//	UARTIntClear(UART1_BASE,UART_INT_RT|UART_INT_RX);//|UART_INT_RX
+//	//	SerialGetStr(UART1_BASE,Uart.Command_Data);
+//	//	Uart.Flag_receive=1;
+//	uint32_t interrupt_status;
+//	interrupt_status=UARTIntStatus(UART1_BASE,true);
+//	interrupt_status=UARTIntStatus(UART1_BASE,true);
+//	if((((interrupt_status&UART_INT_RT)==UART_INT_RT)|((interrupt_status&UART_INT_RX)==UART_INT_RX))==1)
+//	{
+//		interrupt_status=UARTIntStatus(UART1_BASE,true);
+//		UARTIntClear(UART1_BASE,UART_INT_RT|UART_INT_RX);//|UART_INT_RX
+//		SerialGetStr(UART1_BASE,Uart.Command_Data);
+//		Uart.Flag_receive=1;
+//	}
+//#else
+//	// return: true-the masked interrupt status | false -the current interrupt status
+//	uint32_t interrupt_status;
+//	interrupt_status=UARTIntStatus(UART1_BASE,true);
+//
+//	if((((interrupt_status&UART_INT_RT)==UART_INT_RT)|((interrupt_status&UART_INT_RX)==UART_INT_RX))==1)
+//	{
+//		UARTIntClear(UART1_BASE,UART_INT_RT|UART_INT_RX);//|UART_INT_RX
+//		unsigned char flag_valid_data=0;
+//		char charData;
+//
+//		while(UARTCharsAvail(UART1_BASE))
+//		{
+//			charData=(char)UARTCharGet(UART1_BASE);
+//			if(charData==COM_TERMINATOR_)
+//			{
+//				flag_valid_data=1;
+//				FIFO_Rx_CharPut(&communicationFIFO,STR_TERMINATOR_);
+//			}
+//			else
+//				FIFO_Rx_CharPut(&communicationFIFO,charData);
+//		}
+//
+//		if(flag_valid_data==1)
+//		{
+//			flag_valid_data=0;
+//			FIFO_Rx_StrGet(&communicationFIFO,Uart.Command_Data);
+//			Uart.Flag_receive=1;
+//		}
+//	}
+//
+//	else if((interrupt_status&UART_INT_TX)==UART_INT_TX)
+//	{
+//		UARTIntClear(UART1_BASE,UART_INT_TX);
+//		update_hardwareFIFO(&communicationFIFO,UART1_BASE);
+//	}
+//#endif
+//}
 
 
 //void UART1_Interrupt_Handler(void)

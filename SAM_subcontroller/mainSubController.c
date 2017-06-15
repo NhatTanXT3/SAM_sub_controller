@@ -55,6 +55,9 @@ void main(){
     RS485_4_Init();
     RS485_2_Init();
     RS485_3_Init();
+    RS485_1_Init();
+    RS485_6_Init();
+    RS485_7_Init();
 
     UART5_Init();
 
@@ -195,51 +198,49 @@ void communication(){
                         samReadBusy=1;
                         toggle_led[1]^=1;
                         led(LED_BLUE,toggle_led[1]);
-                        samReadCurrentID_C4=1;
-                        SAM_get_jointAngle12bit(samReadCurrentID_C4);
-                        samReadCurrentID_C2=0;
-                        SAM_get_jointAngle12bit(samReadCurrentID_C2);
-
-                        samReadCurrentID_C3=10;
-                        SAM_get_jointAngle12bit(samReadCurrentID_C3);
+                        samReadCurrentID_C1=1;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C1);
+                        samReadCurrentID_C6=0;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C6);
+                        samReadCurrentID_C7=10;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C7);
                         Timer1_Reset();
 
                         while(samReadBusy);
                         samReadBusy=1;
-                        samReadCurrentID_C4=3;
-                        SAM_get_jointAngle12bit(samReadCurrentID_C4);
-                        samReadCurrentID_C2=2;
-                        SAM_get_jointAngle12bit(samReadCurrentID_C2);
-
-                        samReadCurrentID_C3=11;
-                        SAM_get_jointAngle12bit(samReadCurrentID_C3);
+                        samReadCurrentID_C1=3;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C1);
+                        samReadCurrentID_C6=2;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C6);
+                        samReadCurrentID_C7=11;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C7);
                         Timer1_Reset();
 
                         while(samReadBusy);
                         samReadBusy=1;
-                        samReadCurrentID_C4=5;
-                        SAM_get_jointAngle12bit(samReadCurrentID_C4);
-                        samReadCurrentID_C2=4;
-                        SAM_get_jointAngle12bit(samReadCurrentID_C2);
+                        samReadCurrentID_C1=5;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C1);
+                        samReadCurrentID_C6=4;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C6);
 
-                        samReadCurrentID_C3=22;
-                        SAM_get_jointAngle12bit(samReadCurrentID_C3);
+                        samReadCurrentID_C7=22;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C7);
                         Timer1_Reset();
 
                         while(samReadBusy);
                         samReadBusy=1;
-                        samReadCurrentID_C4=7;
-                        SAM_get_jointAngle12bit(samReadCurrentID_C4);
-                        samReadCurrentID_C2=6;
-                        SAM_get_jointAngle12bit(samReadCurrentID_C2);
+                        samReadCurrentID_C1=7;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C1);
+                        samReadCurrentID_C6=6;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C6);
                         Timer1_Reset();
 
                         while(samReadBusy);
                         samReadBusy=1;
-                        samReadCurrentID_C4=9;
-                        SAM_get_jointAngle12bit(samReadCurrentID_C4);
-                        samReadCurrentID_C2=8;
-                        SAM_get_jointAngle12bit(samReadCurrentID_C2);
+                        samReadCurrentID_C1=9;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C1);
+                        samReadCurrentID_C6=8;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C6);
                         Timer1_Reset();
 
 
@@ -350,48 +351,48 @@ void communication(){
                         samReadBusy=1;
                         toggle_led[1]^=1;
                         led(LED_BLUE,toggle_led[1]);
-                        samReadCurrentID_C4=1;
-                        SAM_get_jointAngle8bit(samReadCurrentID_C4);
-                        samReadCurrentID_C2=0;
-                        SAM_get_jointAngle8bit(samReadCurrentID_C2);
-                        samReadCurrentID_C3=10;
-                        SAM_get_jointAngle8bit(samReadCurrentID_C3);
+                        samReadCurrentID_C1=1;
+                        SAM_get_jointAngle8bit(samReadCurrentID_C1);
+                        samReadCurrentID_C6=0;
+                        SAM_get_jointAngle8bit(samReadCurrentID_C6);
+                        samReadCurrentID_C7=10;
+                        SAM_get_jointAngle8bit(samReadCurrentID_C7);
                         Timer1_Reset();
 
                         while(samReadBusy);
                         samReadBusy=1;
-                        samReadCurrentID_C4=3;
-                        SAM_get_jointAngle8bit(samReadCurrentID_C4);
-                        samReadCurrentID_C2=2;
-                        SAM_get_jointAngle8bit(samReadCurrentID_C2);
-                        samReadCurrentID_C3=11;
-                        SAM_get_jointAngle8bit(samReadCurrentID_C3);
+                        samReadCurrentID_C1=3;
+                        SAM_get_jointAngle8bit(samReadCurrentID_C1);
+                        samReadCurrentID_C6=2;
+                        SAM_get_jointAngle8bit(samReadCurrentID_C6);
+                        samReadCurrentID_C7=11;
+                        SAM_get_jointAngle8bit(samReadCurrentID_C7);
                         Timer1_Reset();
 
                         while(samReadBusy);
                         samReadBusy=1;
-                        samReadCurrentID_C4=5;
-                        SAM_get_jointAngle8bit(samReadCurrentID_C4);
-                        samReadCurrentID_C2=4;
-                        SAM_get_jointAngle8bit(samReadCurrentID_C2);
-                        samReadCurrentID_C3=22;
-                        SAM_get_jointAngle8bit(samReadCurrentID_C3);
+                        samReadCurrentID_C1=5;
+                        SAM_get_jointAngle8bit(samReadCurrentID_C1);
+                        samReadCurrentID_C6=4;
+                        SAM_get_jointAngle8bit(samReadCurrentID_C6);
+                        samReadCurrentID_C7=22;
+                        SAM_get_jointAngle8bit(samReadCurrentID_C7);
                         Timer1_Reset();
 
                         while(samReadBusy);
                         samReadBusy=1;
-                        samReadCurrentID_C4=7;
-                        SAM_get_jointAngle8bit(samReadCurrentID_C4);
-                        samReadCurrentID_C2=6;
-                        SAM_get_jointAngle8bit(samReadCurrentID_C2);
+                        samReadCurrentID_C1=7;
+                        SAM_get_jointAngle8bit(samReadCurrentID_C1);
+                        samReadCurrentID_C6=6;
+                        SAM_get_jointAngle8bit(samReadCurrentID_C6);
                         Timer1_Reset();
 
                         while(samReadBusy);
                         samReadBusy=1;
-                        samReadCurrentID_C4=9;
-                        SAM_get_jointAngle8bit(samReadCurrentID_C4);
-                        samReadCurrentID_C2=8;
-                        SAM_get_jointAngle8bit(samReadCurrentID_C2);
+                        samReadCurrentID_C1=9;
+                        SAM_get_jointAngle8bit(samReadCurrentID_C1);
+                        samReadCurrentID_C6=8;
+                        SAM_get_jointAngle8bit(samReadCurrentID_C6);
                         Timer1_Reset();
 
 
@@ -489,48 +490,48 @@ void communication(){
                     if(serialPC.dataIndex==3){//check length of data
                         while(samReadBusy);
                         samReadBusy=1;
-                        samReadCurrentID_C4=1;
-                        SAM_get_avergTorque(samReadCurrentID_C4);
-                        samReadCurrentID_C2=0;
-                        SAM_get_avergTorque(samReadCurrentID_C2);
-                        samReadCurrentID_C3=10;
-                        SAM_get_avergTorque(samReadCurrentID_C3);
+                        samReadCurrentID_C1=1;
+                        SAM_get_avergTorque(samReadCurrentID_C1);
+                        samReadCurrentID_C6=0;
+                        SAM_get_avergTorque(samReadCurrentID_C6);
+                        samReadCurrentID_C7=10;
+                        SAM_get_avergTorque(samReadCurrentID_C7);
                         Timer1_Reset();
 
                         while(samReadBusy);
                         samReadBusy=1;
-                        samReadCurrentID_C4=3;
-                        SAM_get_avergTorque(samReadCurrentID_C4);
-                        samReadCurrentID_C2=2;
-                        SAM_get_avergTorque(samReadCurrentID_C2);
-                        samReadCurrentID_C3=11;
-                        SAM_get_avergTorque(samReadCurrentID_C3);
+                        samReadCurrentID_C1=3;
+                        SAM_get_avergTorque(samReadCurrentID_C1);
+                        samReadCurrentID_C6=2;
+                        SAM_get_avergTorque(samReadCurrentID_C6);
+                        samReadCurrentID_C7=11;
+                        SAM_get_avergTorque(samReadCurrentID_C7);
                         Timer1_Reset();
 
                         while(samReadBusy);
                         samReadBusy=1;
-                        samReadCurrentID_C4=5;
-                        SAM_get_avergTorque(samReadCurrentID_C4);
-                        samReadCurrentID_C2=4;
-                        SAM_get_avergTorque(samReadCurrentID_C2);
-                        samReadCurrentID_C3=22;
-                        SAM_get_avergTorque(samReadCurrentID_C3);
+                        samReadCurrentID_C1=5;
+                        SAM_get_avergTorque(samReadCurrentID_C1);
+                        samReadCurrentID_C6=4;
+                        SAM_get_avergTorque(samReadCurrentID_C6);
+                        samReadCurrentID_C7=22;
+                        SAM_get_avergTorque(samReadCurrentID_C7);
                         Timer1_Reset();
 
                         while(samReadBusy);
                         samReadBusy=1;
-                        samReadCurrentID_C4=7;
-                        SAM_get_avergTorque(samReadCurrentID_C4);
-                        samReadCurrentID_C2=6;
-                        SAM_get_avergTorque(samReadCurrentID_C2);
+                        samReadCurrentID_C1=7;
+                        SAM_get_avergTorque(samReadCurrentID_C1);
+                        samReadCurrentID_C6=6;
+                        SAM_get_avergTorque(samReadCurrentID_C6);
                         Timer1_Reset();
 
                         while(samReadBusy);
                         samReadBusy=1;
-                        samReadCurrentID_C4=9;
-                        SAM_get_avergTorque(samReadCurrentID_C4);
-                        samReadCurrentID_C2=8;
-                        SAM_get_avergTorque(samReadCurrentID_C2);
+                        samReadCurrentID_C1=9;
+                        SAM_get_avergTorque(samReadCurrentID_C1);
+                        samReadCurrentID_C6=8;
+                        SAM_get_avergTorque(samReadCurrentID_C6);
                         Timer1_Reset();
 
 
@@ -572,9 +573,9 @@ void communication(){
                                 sam1.P=serialPC.Command_Data[refIndex+1]+((serialPC.Command_Data[refIndex]<<1)&0x80);
                                 sam1.D=serialPC.Command_Data[refIndex+2]+((serialPC.Command_Data[refIndex]<<2)&0x80);
                                 SAM_set_PD_RuntimeQuick(sam1.id, sam1.P, sam1.D);
-//                                while(samReadBusy);
-//                                samReadBusy=1;
-//                                Timer1_Reset();
+                                //                                while(samReadBusy);
+                                //                                samReadBusy=1;
+                                //                                Timer1_Reset();
                             }
                             else
                             {
@@ -591,48 +592,48 @@ void communication(){
                     if(serialPC.dataIndex==3){//check length of data
                         while(samReadBusy);
                         samReadBusy=1;
-                        samReadCurrentID_C4=1;
-                        SAM_get_PD(samReadCurrentID_C4);
-                        samReadCurrentID_C2=0;
-                        SAM_get_PD(samReadCurrentID_C2);
-                        samReadCurrentID_C3=10;
-                        SAM_get_PD(samReadCurrentID_C3);
+                        samReadCurrentID_C1=1;
+                        SAM_get_PD(samReadCurrentID_C1);
+                        samReadCurrentID_C6=0;
+                        SAM_get_PD(samReadCurrentID_C6);
+                        samReadCurrentID_C7=10;
+                        SAM_get_PD(samReadCurrentID_C7);
                         Timer1_Reset();
 
                         while(samReadBusy);
                         samReadBusy=1;
-                        samReadCurrentID_C4=3;
-                        SAM_get_PD(samReadCurrentID_C4);
-                        samReadCurrentID_C2=2;
-                        SAM_get_PD(samReadCurrentID_C2);
-                        samReadCurrentID_C3=11;
-                        SAM_get_PD(samReadCurrentID_C3);
+                        samReadCurrentID_C1=3;
+                        SAM_get_PD(samReadCurrentID_C1);
+                        samReadCurrentID_C6=2;
+                        SAM_get_PD(samReadCurrentID_C6);
+                        samReadCurrentID_C7=11;
+                        SAM_get_PD(samReadCurrentID_C7);
                         Timer1_Reset();
 
                         while(samReadBusy);
                         samReadBusy=1;
-                        samReadCurrentID_C4=5;
-                        SAM_get_PD(samReadCurrentID_C4);
-                        samReadCurrentID_C2=4;
-                        SAM_get_PD(samReadCurrentID_C2);
-                        samReadCurrentID_C3=22;
-                        SAM_get_PD(samReadCurrentID_C3);
+                        samReadCurrentID_C1=5;
+                        SAM_get_PD(samReadCurrentID_C1);
+                        samReadCurrentID_C6=4;
+                        SAM_get_PD(samReadCurrentID_C6);
+                        samReadCurrentID_C7=22;
+                        SAM_get_PD(samReadCurrentID_C7);
                         Timer1_Reset();
 
                         while(samReadBusy);
                         samReadBusy=1;
-                        samReadCurrentID_C4=7;
-                        SAM_get_PD(samReadCurrentID_C4);
-                        samReadCurrentID_C2=6;
-                        SAM_get_PD(samReadCurrentID_C2);
+                        samReadCurrentID_C1=7;
+                        SAM_get_PD(samReadCurrentID_C1);
+                        samReadCurrentID_C6=6;
+                        SAM_get_PD(samReadCurrentID_C6);
                         Timer1_Reset();
 
                         while(samReadBusy);
                         samReadBusy=1;
-                        samReadCurrentID_C4=9;
-                        SAM_get_PD(samReadCurrentID_C4);
-                        samReadCurrentID_C2=8;
-                        SAM_get_PD(samReadCurrentID_C2);
+                        samReadCurrentID_C1=9;
+                        SAM_get_PD(samReadCurrentID_C1);
+                        samReadCurrentID_C6=8;
+                        SAM_get_PD(samReadCurrentID_C6);
                         Timer1_Reset();
 
 

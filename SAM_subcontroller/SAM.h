@@ -16,31 +16,31 @@
 /*
  * define for hardware
  */
-#define UART_RS485_ID_0_    UART_RS485_2_
-#define UART_RS485_ID_1_    UART_RS485_4_
-#define UART_RS485_ID_2_    UART_RS485_2_
-#define UART_RS485_ID_3_    UART_RS485_4_
-#define UART_RS485_ID_4_    UART_RS485_2_
-#define UART_RS485_ID_5_    UART_RS485_4_
-#define UART_RS485_ID_6_ UART_RS485_2_
-#define UART_RS485_ID_7_ UART_RS485_4_
-#define UART_RS485_ID_8_ UART_RS485_2_
-#define UART_RS485_ID_9_ UART_RS485_4_
-#define UART_RS485_ID_10_ UART_RS485_3_
-#define UART_RS485_ID_11_ UART_RS485_3_
+#define UART_RS485_ID_0_    UART_RS485_6_
+#define UART_RS485_ID_1_    UART_RS485_1_
+#define UART_RS485_ID_2_    UART_RS485_6_
+#define UART_RS485_ID_3_    UART_RS485_1_
+#define UART_RS485_ID_4_    UART_RS485_6_
+#define UART_RS485_ID_5_    UART_RS485_1_
+#define UART_RS485_ID_6_ UART_RS485_6_
+#define UART_RS485_ID_7_ UART_RS485_1_
+#define UART_RS485_ID_8_ UART_RS485_6_
+#define UART_RS485_ID_9_ UART_RS485_1_
+#define UART_RS485_ID_10_ UART_RS485_7_
+#define UART_RS485_ID_11_ UART_RS485_7_
 #define UART_RS485_ID_12_ UART_RS485_4_
-#define UART_RS485_ID_13_ UART_RS485_4_
+#define UART_RS485_ID_13_ UART_RS485_2_
 #define UART_RS485_ID_14_ UART_RS485_4_
-#define UART_RS485_ID_15_ UART_RS485_4_
+#define UART_RS485_ID_15_ UART_RS485_2_
 #define UART_RS485_ID_16_ UART_RS485_4_
-#define UART_RS485_ID_17_ UART_RS485_4_
+#define UART_RS485_ID_17_ UART_RS485_2_
 #define UART_RS485_ID_18_ UART_RS485_4_
-#define UART_RS485_ID_19_ UART_RS485_4_
+#define UART_RS485_ID_19_ UART_RS485_2_
 #define UART_RS485_ID_20_ UART_RS485_4_
 #define UART_RS485_ID_21_ UART_RS485_4_
-#define UART_RS485_ID_22_ UART_RS485_3_
-#define UART_RS485_ID_23_ UART_RS485_4_
-#define UART_RS485_ID_24_ UART_RS485_4_
+#define UART_RS485_ID_22_ UART_RS485_7_
+#define UART_RS485_ID_23_ UART_RS485_3_
+#define UART_RS485_ID_24_ UART_RS485_3_
 #define UART_RS485_ID_25_ UART_RS485_4_
 #define UART_RS485_ID_26_ UART_RS485_4_
 #define UART_RS485_ID_27_ UART_RS485_4_
@@ -84,6 +84,8 @@ extern volatile unsigned char samLoad8[];
 extern volatile unsigned char samP[];
 extern volatile unsigned char samI[];
 extern volatile unsigned char samD[];
+extern volatile unsigned char samReadCurrentID_C7;
+extern volatile unsigned char samReadCurrentID_C6;
 extern volatile unsigned char samReadCurrentID_C4;
 extern volatile unsigned char samReadCurrentID_C3;
 extern volatile unsigned char samReadCurrentID_C2;

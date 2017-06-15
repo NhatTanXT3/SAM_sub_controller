@@ -38,9 +38,11 @@ extern void  UART0_Interrupt_Handler(void);
 extern void  UART1_Interrupt_Handler(void);
 extern void UART2_Interrupt_Handler(void);
 extern void  UART3_Interrupt_Handler(void);
-
+extern void  UART6_Interrupt_Handler(void);
+extern void  UART7_Interrupt_Handler(void);
 extern void UART4_Interrupt_Handler(void);
 extern void  UART5_Interrupt_Handler(void);
+
 extern void  Timer0_Interrupt_Handler(void);
 extern void  Timer1_Interrupt_Handler(void);
 extern void SycTick_Interrupt_Handler(void);
@@ -155,8 +157,8 @@ void (* const g_pfnVectors[])(void) =
 	UART3_Interrupt_Handler,                	// UART3 Rx and Tx
 	UART4_Interrupt_Handler,                      // UART4 Rx and Tx
 	UART5_Interrupt_Handler,                      // UART5 Rx and Tx
-    IntDefaultHandler,                      // UART6 Rx and Tx
-    IntDefaultHandler,                      // UART7 Rx and Tx
+	UART6_Interrupt_Handler,                      // UART6 Rx and Tx
+	UART7_Interrupt_Handler,                      // UART7 Rx and Tx
     0,                                      // Reserved
     0,                                      // Reserved
     0,                                      // Reserved

@@ -144,34 +144,34 @@ void UART5_Interrupt_Handler(void)
 		//		serialGetData(UART3_BASE,serialPC.Command_Data);
 	}
 }
-
-void UART7_Init(){
-	//
-	// Enable Peripheral Clocks
-	//
-	SysCtlPeripheralEnable(SYSCTL_PERIPH_UART7);
-	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
-	//
-	// Enable pin PE0 for UART7 U7RX
-	//
-	GPIOPinConfigure(GPIO_PE0_U7RX);
-	GPIOPinTypeUART(GPIO_PORTE_BASE, GPIO_PIN_0);
-
-	//
-	// Enable pin PE1 for UART7 U7TX
-	//
-	GPIOPinConfigure(GPIO_PE1_U7TX);
-	GPIOPinTypeUART(GPIO_PORTE_BASE, GPIO_PIN_1);
-
-	UARTConfigSetExpClk(UART7_BASE, SysCtlClockGet(), 115200,
-			(UART_CONFIG_WLEN_8 | UART_CONFIG_STOP_ONE | UART_CONFIG_PAR_NONE));
-
-	IntMasterEnable(); //enable processor interrupts
-	IntEnable(INT_UART7); //enable the UART interrupt
-
-	UARTFIFOLevelSet(UART7_BASE,UART_FIFO_TX1_8,UART_FIFO_RX4_8);
-	UARTIntEnable(UART7_BASE, UART_INT_RX|UART_INT_RT);
-}
+//
+//void UART7_Init(){
+//	//
+//	// Enable Peripheral Clocks
+//	//
+//	SysCtlPeripheralEnable(SYSCTL_PERIPH_UART7);
+//	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
+//	//
+//	// Enable pin PE0 for UART7 U7RX
+//	//
+//	GPIOPinConfigure(GPIO_PE0_U7RX);
+//	GPIOPinTypeUART(GPIO_PORTE_BASE, GPIO_PIN_0);
+//
+//	//
+//	// Enable pin PE1 for UART7 U7TX
+//	//
+//	GPIOPinConfigure(GPIO_PE1_U7TX);
+//	GPIOPinTypeUART(GPIO_PORTE_BASE, GPIO_PIN_1);
+//
+//	UARTConfigSetExpClk(UART7_BASE, SysCtlClockGet(), 115200,
+//			(UART_CONFIG_WLEN_8 | UART_CONFIG_STOP_ONE | UART_CONFIG_PAR_NONE));
+//
+//	IntMasterEnable(); //enable processor interrupts
+//	IntEnable(INT_UART7); //enable the UART interrupt
+//
+//	UARTFIFOLevelSet(UART7_BASE,UART_FIFO_TX1_8,UART_FIFO_RX4_8);
+//	UARTIntEnable(UART7_BASE, UART_INT_RX|UART_INT_RT);
+//}
 
 
 void serialGetData(uint32_t ui32Base,char *uart_str)

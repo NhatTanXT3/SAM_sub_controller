@@ -34,6 +34,8 @@ volatile unsigned char  samReadBusy;
 unsigned char samReadMode;
 
 // use this variable care fully, this variable for transparent of hardware
+volatile unsigned char samReadCurrentID_C7;
+volatile unsigned char samReadCurrentID_C6;
 volatile unsigned char samReadCurrentID_C4;
 volatile unsigned char samReadCurrentID_C3;
 volatile unsigned char samReadCurrentID_C2;
@@ -161,6 +163,18 @@ void SAM_send_bytes(unsigned char ID, char *data, unsigned char size)
         samReadCurrentID_C3=ID;
         GPIOPinWrite(GPIO_PORTB_BASE,GPIO_PIN_6,GPIO_PIN_6);
         break;
+    case UART_RS485_1_:
+           samReadCurrentID_C1=ID;
+           GPIOPinWrite(GPIO_PORTB_BASE,GPIO_PIN_2,GPIO_PIN_2);
+           break;
+    case UART_RS485_6_:
+           samReadCurrentID_C6=ID;
+           GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_3,GPIO_PIN_3);
+           break;
+    case UART_RS485_7_:
+           samReadCurrentID_C7=ID;
+           GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_2,GPIO_PIN_2);
+           break;
     default:
         break;
     }

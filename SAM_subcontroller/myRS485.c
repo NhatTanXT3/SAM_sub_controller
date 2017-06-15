@@ -29,10 +29,189 @@
 #include "myRS485.h"
 #include "myIO.h"
 #include "SAM.h"
+/*
+ *  RS485 7 module using UART7 and PA2
+ */
+void RS485_7_Init(){
+    //
+    // Enable Peripheral Clocks
+    //
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_UART7);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
+    //
+    // Enable pin PE0 for UART7 U7RX
+    //
+    GPIOPinConfigure(GPIO_PE0_U7RX);
+    GPIOPinTypeUART(GPIO_PORTE_BASE, GPIO_PIN_0);
 
+    //
+    // Enable pin PE1 for UART7 U7TX
+    //
+    GPIOPinConfigure(GPIO_PE1_U7TX);
+    GPIOPinTypeUART(GPIO_PORTE_BASE, GPIO_PIN_1);
+
+    UARTConfigSetExpClk(UART7_BASE, SysCtlClockGet(), 1500000,
+                        (UART_CONFIG_WLEN_8 | UART_CONFIG_STOP_ONE | UART_CONFIG_PAR_NONE));
+
+
+    UARTEnable(UART7_BASE);
+
+    UARTFIFOEnable(UART7_BASE);
+    UARTFIFOLevelSet(UART7_BASE,UART_FIFO_TX1_8,UART_FIFO_RX2_8);
+    UARTTxIntModeSet(UART7_BASE,UART_TXINT_MODE_EOT);
+    UARTIntEnable(UART7_BASE,  UART_INT_RT|UART_INT_RX|UART_INT_TX);
+
+    IntMasterEnable(); //enable processor interrupts
+    IntEnable(INT_UART7); //enable the UART interrup
+
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
+    GPIOPinTypeGPIOOutput(GPIO_PORTA_BASE, GPIO_PIN_2);
+}
+void UART7_Interrupt_Handler(void)
+{
+    uint32_t interrupt_status;
+    interrupt_status=UARTIntStatus(UART7_BASE,true);
+
+    if((interrupt_status&UART_INT_TX))
+    {
+        GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_2,0);
+        UARTIntClear(UART7_BASE,UART_INT_TX);
+    }
+    else if(interrupt_status&(UART_INT_RT|UART_INT_RX))
+    {
+        UARTIntClear(UART7_BASE,UART_INT_RT|UART_INT_RX);
+        char charData[3];
+        unsigned char dataCount=0;
+        while(UARTCharsAvail(UART7_BASE))
+        {
+            charData[dataCount]=(char)UARTCharGet(UART7_BASE);
+            dataCount++;
+        }
+        if(dataCount==2)
+        {
+            if(samReadBusy)
+            {
+                switch(samReadMode){
+                case SAMREAD_POS8_:
+                    samLoad8[samReadCurrentID_C7]=(unsigned char)charData[0];
+                    samPosition8[samReadCurrentID_C7]=(unsigned char)charData[1];
+                    break;
+                case SAMREAD_POS12_:
+                    samPosition12[samReadCurrentID_C7]=((charData[0]&0x1F)<<7)+(charData[1]&0x7F);
+                    break;
+                case SAMREAD_PD_:
+                    samP[samReadCurrentID_C7]=charData[0];
+                    samD[samReadCurrentID_C7]=charData[1];
+                    break;
+                case SAMREAD_I_:
+                    samI[samReadCurrentID_C7]=charData[0];
+                    break;
+                case SAMREAD_AVRG_TORQUE_:
+                    samAverageTorq[samReadCurrentID_C7]=((charData[0]&0x1F)<<7)+(charData[1]&0x7F);
+                    break;
+                default:
+                    break;
+                }
+                samDataAvail[samReadCurrentID_C7]=1;
+            }
+
+        }
+    }
+}
+/*
+ *  RS485 6 module using UART6 and PA3
+ */
+void RS485_6_Init()
+{
+    //
+    // Enable Peripheral Clocks
+    //
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_UART6);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);
+
+    //
+    // Enable pin PD5 for UART6 U6TX
+    //
+    GPIOPinConfigure(GPIO_PD5_U6TX);
+    GPIOPinTypeUART(GPIO_PORTD_BASE, GPIO_PIN_5);
+
+    //
+    // Enable pin PD4 for UART6 U6RX
+    //
+    GPIOPinConfigure(GPIO_PD4_U6RX);
+    GPIOPinTypeUART(GPIO_PORTD_BASE, GPIO_PIN_4);
+
+    UARTConfigSetExpClk(UART6_BASE, SysCtlClockGet(), 1500000,
+                        (UART_CONFIG_WLEN_8 | UART_CONFIG_STOP_ONE | UART_CONFIG_PAR_NONE));
+
+    UARTEnable(UART6_BASE);
+
+
+    UARTFIFOEnable(UART6_BASE);
+    UARTFIFOLevelSet(UART6_BASE,UART_FIFO_TX1_8,UART_FIFO_RX2_8);
+    UARTTxIntModeSet(UART6_BASE,UART_TXINT_MODE_EOT);
+    UARTIntEnable(UART6_BASE,  UART_INT_RT|UART_INT_RX|UART_INT_TX);
+
+    IntMasterEnable(); //enable processor interrupts
+    IntEnable(INT_UART6); //enable the UART interrup
+
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
+    GPIOPinTypeGPIOOutput(GPIO_PORTA_BASE, GPIO_PIN_3);
+}
+void UART6_Interrupt_Handler(void)
+{
+    uint32_t interrupt_status;
+    interrupt_status=UARTIntStatus(UART6_BASE,true);
+
+    if((interrupt_status&UART_INT_TX))
+    {
+        GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_3,0);
+        UARTIntClear(UART6_BASE,UART_INT_TX);
+    }
+    else if(interrupt_status&(UART_INT_RT|UART_INT_RX))
+    {
+        UARTIntClear(UART6_BASE,UART_INT_RT|UART_INT_RX);
+        char charData[3];
+        unsigned char dataCount=0;
+        while(UARTCharsAvail(UART6_BASE))
+        {
+            charData[dataCount]=(char)UARTCharGet(UART6_BASE);
+            dataCount++;
+        }
+        if(dataCount==2)
+        {
+            if(samReadBusy)
+            {
+                switch(samReadMode){
+                case SAMREAD_POS8_:
+                    samLoad8[samReadCurrentID_C6]=(unsigned char)charData[0];
+                    samPosition8[samReadCurrentID_C6]=(unsigned char)charData[1];
+                    break;
+                case SAMREAD_POS12_:
+                    samPosition12[samReadCurrentID_C6]=((charData[0]&0x1F)<<7)+(charData[1]&0x7F);
+                    break;
+                case SAMREAD_PD_:
+                    samP[samReadCurrentID_C6]=charData[0];
+                    samD[samReadCurrentID_C6]=charData[1];
+                    break;
+                case SAMREAD_I_:
+                    samI[samReadCurrentID_C6]=charData[0];
+                    break;
+                case SAMREAD_AVRG_TORQUE_:
+                    samAverageTorq[samReadCurrentID_C6]=((charData[0]&0x1F)<<7)+(charData[1]&0x7F);
+                    break;
+                default:
+                    break;
+                }
+                samDataAvail[samReadCurrentID_C6]=1;
+            }
+
+        }
+    }
+}
 
 /*
- *  RS485 1 module using UART2 and PB77
+ *  RS485 1 module using UART1 and PB2
  */
 void RS485_1_Init(){
 
@@ -64,7 +243,7 @@ void RS485_1_Init(){
     IntEnable(INT_UART1); //enable the UART interrup
 
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
-    GPIOPinTypeGPIOOutput(GPIO_PORTB_BASE, GPIO_PIN_7);
+    GPIOPinTypeGPIOOutput(GPIO_PORTB_BASE, GPIO_PIN_2);
 }
 
 void UART1_Interrupt_Handler(void)
@@ -74,17 +253,9 @@ void UART1_Interrupt_Handler(void)
 
     if((interrupt_status&UART_INT_TX))
     {
-        //GPIOPinWrite(GPIO_PORTF_BASE,GPIO_PIN_3,0);
-        GPIOPinWrite(GPIO_PORTB_BASE,GPIO_PIN_7,0);
+        GPIOPinWrite(GPIO_PORTB_BASE,GPIO_PIN_2,0);
         UARTIntClear(UART1_BASE,UART_INT_TX);
     }
-    //  else if(interrupt_status&UART_INT_RX)
-    //  {
-    //      UARTIntClear(UART2_BASE,UART_INT_RX);//|UART_INT_RX
-    //      char charData;
-    //      while(UARTCharsAvail(UART2_BASE))
-    //          charData=(char)UARTCharGet(UART2_BASE);
-    //  }
     else if(interrupt_status&(UART_INT_RT|UART_INT_RX))
     {
         UARTIntClear(UART1_BASE,UART_INT_RT|UART_INT_RX);
@@ -114,17 +285,19 @@ void UART1_Interrupt_Handler(void)
                 case SAMREAD_I_:
                     samI[samReadCurrentID_C1]=charData[0];
                     break;
+                case SAMREAD_AVRG_TORQUE_:
+                    samAverageTorq[samReadCurrentID_C1]=((charData[0]&0x1F)<<7)+(charData[1]&0x7F);
+                    break;
                 default:
                     break;
                 }
                 samDataAvail[samReadCurrentID_C1]=1;
             }
-
         }
     }
 }
 /*
- *  RS485 2 module using UART2 and PA2
+ *  RS485 2 module using UART2 and PB7
  */
 void RS485_2_Init(){
     //
@@ -238,7 +411,7 @@ void UART2_Interrupt_Handler(void)
 
 
 /*
- *  RS485 4 module using UART4 and PA3
+ *  RS485 4 module using UART4 and PA4
  */
 void RS485_4_Init(){
     //
@@ -347,7 +520,9 @@ void UART4_Interrupt_Handler(void)
     }
 }
 
-
+/*
+ *  RS485 3 module using UART3 and PB6
+ */
 void RS485_3_Init()
 {
     //
@@ -402,31 +577,6 @@ void UART3_Interrupt_Handler(void)
         //        GPIOPinWrite(GPIO_PORTA_BASE,GPIO_PIN_4,0);
         UARTIntClear(UART3_BASE,UART_INT_TX);
     }
-    //    else if(interrupt_status&UART_INT_RX)
-    //    {
-    //        UARTIntClear(UART3_BASE,UART_INT_RX);//|UART_INT_RX
-    //        char charData;
-    //        while(UARTCharsAvail(UART3_BASE))
-    //            charData=(char)UARTCharGet(UART3_BASE);
-    //    }
-    //    else if(interrupt_status&UART_INT_RT)
-    //    {
-    //        UARTIntClear(UART3_BASE,UART_INT_RT);
-    //
-    //        char charData[3];
-    //        unsigned char dataCount=0;
-    //        unsigned int UART3_data=0;
-    //        while(UARTCharsAvail(UART3_BASE))
-    //        {
-    //            charData[dataCount]=(char)UARTCharGet(UART3_BASE);
-    //            dataCount++;
-    //        }
-    //        if(dataCount==2)
-    //        {
-    //            UART3_data=((charData[0]&0x1F)<<7)+(charData[1]&0x7F);
-    //
-    //        }
-    //    }
     else if(interrupt_status&(UART_INT_RT|UART_INT_RX))
     {
         UARTIntClear(UART3_BASE,UART_INT_RT|UART_INT_RX);

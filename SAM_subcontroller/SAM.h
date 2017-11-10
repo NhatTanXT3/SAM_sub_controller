@@ -7,7 +7,7 @@
 
 #ifndef SAM_H_
 #define SAM_H_
-#define NUM_OF_SAM_ 24
+#define NUM_OF_SAM_ 25
 
 #define SAM_WRITE_POSITION_ 0
 #define UPPER_12BIT_BOUNDARY_  3700
@@ -39,8 +39,8 @@
 #define UART_RS485_ID_20_ UART_RS485_4_
 #define UART_RS485_ID_21_ UART_RS485_4_
 #define UART_RS485_ID_22_ UART_RS485_7_
-#define UART_RS485_ID_23_ UART_RS485_3_
-#define UART_RS485_ID_24_ UART_RS485_3_
+#define UART_RS485_ID_23_ UART_RS485_4_
+#define UART_RS485_ID_24_ UART_RS485_2_
 #define UART_RS485_ID_25_ UART_RS485_4_
 #define UART_RS485_ID_26_ UART_RS485_4_
 #define UART_RS485_ID_27_ UART_RS485_4_
@@ -79,6 +79,7 @@ extern unsigned char samReadMode;
 extern volatile unsigned int samPosition12[];
 extern volatile unsigned int samAverageTorq[];
 extern volatile unsigned char samDataAvail[];
+extern volatile unsigned char samEnableRead[];
 extern volatile unsigned char samPosition8[];
 extern volatile unsigned char samLoad8[];
 extern volatile unsigned char samP[];

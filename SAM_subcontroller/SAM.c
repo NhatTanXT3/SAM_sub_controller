@@ -27,6 +27,9 @@ volatile unsigned int samAverageTorq[24];
 volatile unsigned char samPosition8[24];
 volatile unsigned char samLoad8[24];
 volatile unsigned char samDataAvail[24];
+volatile unsigned char samEnableRead[24]={1,1,1,1,1,1,1,1,1,1,1,1,
+                                          1,1,1,1,1,1,1,1,1,1,1,1};
+
 volatile unsigned char samP[24];
 volatile unsigned char samI[24];
 volatile unsigned char samD[24];
@@ -190,7 +193,6 @@ void SAM_send_bytes(unsigned char ID, char *data, unsigned char size)
     }
     //  else if(size==4)
 }
-
 void SAM_set_avergTorque(unsigned char ID,unsigned int value){
     samReadMode=SAMREAD_AVRG_TORQUE_;
     char data[7];
@@ -239,7 +241,6 @@ void SAM_set_PD_Runtime(unsigned char ID, unsigned char P, unsigned char D){
     SAM_send_bytes(ID,data,7);
 
 }
-
 void SAM_set_I_Runtime(unsigned char ID, unsigned char I){
     samReadMode=SAMREAD_I_;
     char data[7];
@@ -277,8 +278,6 @@ void SAM_get_I(unsigned char ID){
     data[6]=(data[1]^data[2]^data[3]^data[4]^data[5])&0x7F;
     SAM_send_bytes(ID,data,7);
 }
-
-
 void SAM_get_jointAngle12bit(unsigned char ID){
     samReadMode=SAMREAD_POS12_;
     char data[7];

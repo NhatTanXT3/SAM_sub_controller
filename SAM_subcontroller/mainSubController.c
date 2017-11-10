@@ -54,7 +54,7 @@ void main(){
 
     RS485_4_Init();
     RS485_2_Init();
-    RS485_3_Init();
+    //    RS485_3_Init();
     RS485_1_Init();
     RS485_6_Init();
     RS485_7_Init();
@@ -161,7 +161,7 @@ void communication(){
             if(serialPC.Command_Data[1]&0x80) // special command
             {
                 switch(serialPC.Command_Data[1]){
-                case  PC_SAM_SP_MODE_1_:
+                case  PC_SAM_SP_MODE_1_: // set position of SAM
                     //                  SerialPutStrLn(UART_PC_,"sm1");
                     if(((serialPC.dataIndex-3)%4)==0){ // check length of data
                         unsigned char numOfSam=serialPC.dataIndex/4;
@@ -173,10 +173,18 @@ void communication(){
                             if(((serialPC.Command_Data[refIndex]^serialPC.Command_Data[refIndex+1]^serialPC.Command_Data[refIndex+2])&0x7F)==serialPC.Command_Data[refIndex+3])
                             {
                                 sam1.id=serialPC.Command_Data[refIndex]&0x1F;
-                                //                                sam1.mode=serialPC.Command_Data[refIndex]>>5;
-                                //                                sam1.SAMmode=((serialPC.Command_Data[refIndex]&0x60)>>5)+((serialPC.Command_Data[refIndex+1]&0x60)>>3);
+                                //sam1.mode=serialPC.Command_Data[refIndex]>>5;
+                                sam1.SAMmode=((serialPC.Command_Data[refIndex]&0x60)>>3)+((serialPC.Command_Data[refIndex+1]&0x60)>>5);
                                 sam1.position12=((serialPC.Command_Data[refIndex+1]&0x1F)<<7)+(serialPC.Command_Data[refIndex+2]&0X7F);
-                                SAM_set_jointAngle12bit(sam1.id,sam1.position12);
+                                if(sam1.SAMmode==1){
+                                    SAM_set_jointAngle12bit(sam1.id,sam1.position12);
+                                    samEnableRead[sam1.id]=1;;
+                                }
+                                else if(sam1.SAMmode==2){
+                                    SAM_set_passiveMode(sam1.id);
+                                    samEnableRead[sam1.id]=0;
+                                }
+
                                 //                          display_com();
                             }
                             else
@@ -198,49 +206,63 @@ void communication(){
                         samReadBusy=1;
                         toggle_led[1]^=1;
                         led(LED_BLUE,toggle_led[1]);
+
                         samReadCurrentID_C1=1;
-                        SAM_get_jointAngle12bit(samReadCurrentID_C1);
+                        if(samEnableRead[samReadCurrentID_C1])
+                            SAM_get_jointAngle12bit(samReadCurrentID_C1);
                         samReadCurrentID_C6=0;
-                        SAM_get_jointAngle12bit(samReadCurrentID_C6);
+                        if(samEnableRead[samReadCurrentID_C6])
+                            SAM_get_jointAngle12bit(samReadCurrentID_C6);
                         samReadCurrentID_C7=10;
-                        SAM_get_jointAngle12bit(samReadCurrentID_C7);
+                        if(samEnableRead[samReadCurrentID_C7])
+                            SAM_get_jointAngle12bit(samReadCurrentID_C7);
                         Timer1_Reset();
 
                         while(samReadBusy);
                         samReadBusy=1;
                         samReadCurrentID_C1=3;
-                        SAM_get_jointAngle12bit(samReadCurrentID_C1);
+                        if(samEnableRead[samReadCurrentID_C1])
+                            SAM_get_jointAngle12bit(samReadCurrentID_C1);
                         samReadCurrentID_C6=2;
-                        SAM_get_jointAngle12bit(samReadCurrentID_C6);
+                        if(samEnableRead[samReadCurrentID_C6])
+                            SAM_get_jointAngle12bit(samReadCurrentID_C6);
                         samReadCurrentID_C7=11;
-                        SAM_get_jointAngle12bit(samReadCurrentID_C7);
+                        if(samEnableRead[samReadCurrentID_C7])
+                            SAM_get_jointAngle12bit(samReadCurrentID_C7);
                         Timer1_Reset();
 
                         while(samReadBusy);
                         samReadBusy=1;
                         samReadCurrentID_C1=5;
-                        SAM_get_jointAngle12bit(samReadCurrentID_C1);
+                        if(samEnableRead[samReadCurrentID_C1])
+                            SAM_get_jointAngle12bit(samReadCurrentID_C1);
                         samReadCurrentID_C6=4;
-                        SAM_get_jointAngle12bit(samReadCurrentID_C6);
+                        if(samEnableRead[samReadCurrentID_C6])
+                            SAM_get_jointAngle12bit(samReadCurrentID_C6);
 
                         samReadCurrentID_C7=22;
-                        SAM_get_jointAngle12bit(samReadCurrentID_C7);
+                        if(samEnableRead[samReadCurrentID_C7])
+                            SAM_get_jointAngle12bit(samReadCurrentID_C7);
                         Timer1_Reset();
 
                         while(samReadBusy);
                         samReadBusy=1;
                         samReadCurrentID_C1=7;
-                        SAM_get_jointAngle12bit(samReadCurrentID_C1);
+                        if(samEnableRead[samReadCurrentID_C1])
+                            SAM_get_jointAngle12bit(samReadCurrentID_C1);
                         samReadCurrentID_C6=6;
-                        SAM_get_jointAngle12bit(samReadCurrentID_C6);
+                        if(samEnableRead[samReadCurrentID_C6])
+                            SAM_get_jointAngle12bit(samReadCurrentID_C6);
                         Timer1_Reset();
 
                         while(samReadBusy);
                         samReadBusy=1;
                         samReadCurrentID_C1=9;
-                        SAM_get_jointAngle12bit(samReadCurrentID_C1);
+                        if(samEnableRead[samReadCurrentID_C1])
+                            SAM_get_jointAngle12bit(samReadCurrentID_C1);
                         samReadCurrentID_C6=8;
-                        SAM_get_jointAngle12bit(samReadCurrentID_C6);
+                        if(samEnableRead[samReadCurrentID_C6])
+                            SAM_get_jointAngle12bit(samReadCurrentID_C6);
                         Timer1_Reset();
 
 
@@ -267,7 +289,7 @@ void communication(){
                         SerialPutStrLn(UART_PC_,"e_l_3");
                     }
                     break;
-                case PC_SAM_SP_MODE_3_:
+                case PC_SAM_SP_MODE_3_:// set PID of 1 SAM
                     SerialPutStrLn(UART_PC_,"sm3");
                     if(serialPC.dataIndex==9){ //check length of data
                         if(((serialPC.Command_Data[2]^serialPC.Command_Data[3]^serialPC.Command_Data[4]^serialPC.Command_Data[5]^serialPC.Command_Data[6])&0x7F)==serialPC.Command_Data[7]){
@@ -276,17 +298,16 @@ void communication(){
                             sam1.I=serialPC.Command_Data[5]+((serialPC.Command_Data[3]<<6)&0x80);
                             sam1.D=serialPC.Command_Data[6]+((serialPC.Command_Data[3]<<7)&0x80);
 
-                            //                            while(samReadBusy);
-                            //                            samReadBusy=1;
+                            while(samReadBusy);
+                            samReadBusy=1;
                             SAM_set_PD_Runtime(sam1.id, sam1.P, sam1.D);
-                            //                            Timer1_Reset();
+                            Timer1_Reset();
 
-                            //                            while(samReadBusy);
-                            //                            samReadBusy=1;
+                            while(samReadBusy);
+                            samReadBusy=1;
                             SAM_set_I_Runtime(sam1.id, sam1.I);
-                            //                            Timer1_Reset();
-                            //
-                            //                            while(samReadBusy);
+                            Timer1_Reset();
+                            while(samReadBusy);
 
                         }
                         else{
@@ -297,7 +318,7 @@ void communication(){
                         SerialPutStrLn(UART_PC_,"e_l");
                     }
                     break;
-                case PC_SAM_SP_MODE_4_:
+                case PC_SAM_SP_MODE_4_:// get PID of 1 SAM
                     SerialPutStrLn(UART_PC_,"sm4");
                     if(serialPC.dataIndex==4){ //check length of data
                         unsigned char update_count=0;
@@ -344,7 +365,7 @@ void communication(){
                     }
                     break;
 
-                case PC_SAM_SP_MODE_5_:
+                case PC_SAM_SP_MODE_5_: // read all pos8
                     SerialPutStrLn(UART_PC_,"sm5");
                     if(serialPC.dataIndex==3){//check length of data
                         while(samReadBusy);
@@ -419,7 +440,7 @@ void communication(){
                         SerialPutStrLn(UART_PC_,"e_l_3");
                     }
                     break;
-                case PC_SAM_SP_MODE_6_:
+                case PC_SAM_SP_MODE_6_:// set all passive lower link
                     SerialPutStrLn(UART_PC_,"sm6");
                     if(serialPC.dataIndex==3){//check length of data
                         unsigned char i;
@@ -432,7 +453,7 @@ void communication(){
                         SerialPutStrLn(UART_PC_,"e_l_3");
                     }
                     break;
-                case PC_SAM_SP_MODE_7_:
+                case PC_SAM_SP_MODE_7_:// enable/disable power
                     SerialPutStrLn(UART_PC_,"sm7");
                     if(serialPC.dataIndex==4){//check length of data
                         SAM_Power_enable(serialPC.Command_Data[2]);
@@ -441,7 +462,7 @@ void communication(){
                         SerialPutStrLn(UART_PC_,"e_l_4");
                     }
                     break;
-                case PC_SAM_SP_MODE_8_:
+                case PC_SAM_SP_MODE_8_:// set quick PD
                     SerialPutStrLn(UART_PC_,"sm8");
                     if(serialPC.dataIndex==7){ //check length of data
                         if(((serialPC.Command_Data[2]^serialPC.Command_Data[3]^serialPC.Command_Data[4])&0x7F)==serialPC.Command_Data[5]){
@@ -573,9 +594,11 @@ void communication(){
                                 sam1.P=serialPC.Command_Data[refIndex+1]+((serialPC.Command_Data[refIndex]<<1)&0x80);
                                 sam1.D=serialPC.Command_Data[refIndex+2]+((serialPC.Command_Data[refIndex]<<2)&0x80);
                                 SAM_set_PD_RuntimeQuick(sam1.id, sam1.P, sam1.D);
-                                //                                while(samReadBusy);
-                                //                                samReadBusy=1;
-                                //                                Timer1_Reset();
+                                samReadBusy=1;
+                                Timer1_Reset();
+                                while(samReadBusy);
+
+
                             }
                             else
                             {
@@ -586,6 +609,43 @@ void communication(){
                     }
                     else{
                         SerialPutStrLn(UART_PC_,"e_l_2");
+                    }
+                    break;
+                case  PC_SAM_SP_MODE_14_:
+                    SerialPutStrLn(UART_PC_,"sm14");
+                    if(((serialPC.dataIndex-3)%5)==0){ // check length of data
+                        unsigned char numOfSam=serialPC.dataIndex/5;
+                        unsigned char i;
+                        unsigned char refIndex;
+                        for(i=0;i<numOfSam;i++)
+                        {
+                            refIndex=5*i+2;
+                            if(((serialPC.Command_Data[refIndex]^serialPC.Command_Data[refIndex+1]^serialPC.Command_Data[refIndex+2]^serialPC.Command_Data[refIndex+3])&0x7F)==serialPC.Command_Data[refIndex+4])
+                            {
+                                sam1.id=serialPC.Command_Data[refIndex]&0x1F;
+                                sam1.P=serialPC.Command_Data[refIndex+1]+((serialPC.Command_Data[refIndex]<<1)&0x80);
+                                sam1.D=serialPC.Command_Data[refIndex+2]+((serialPC.Command_Data[refIndex]<<2)&0x80);
+                                sam1.I=serialPC.Command_Data[refIndex+3]&0x7F;
+                                SAM_set_PD_RuntimeQuick(sam1.id, sam1.P, sam1.D);
+                                samReadBusy=1;
+                                Timer1_Reset();
+                                while(samReadBusy);
+                                SAM_set_I_Runtime(sam1.id, sam1.I);
+                                samReadBusy=1;
+                                Timer1_Reset();
+                                while(samReadBusy);
+
+
+                            }
+                            else
+                            {
+                                UARTCharPut(UART_PC_,i+48);
+                                SerialPutStrLn(UART_PC_,"e_cs_14");
+                            }
+                        }
+                    }
+                    else{
+                        SerialPutStrLn(UART_PC_,"e_l_14");
                     }
                     break;
                 case  PC_SAM_SP_MODE_12_:
@@ -650,6 +710,104 @@ void communication(){
                                 dataSendBuffer[refIndex++]=(i&0x1F)+((samP[i]&0x80)>>1)+((samD[i]&0x80)>>2);
                                 dataSendBuffer[refIndex++]=samP[i]&0x7F;
                                 dataSendBuffer[refIndex++]=samD[i]&0x7F;
+                                dataSendBuffer[refIndex++]=(dataSendBuffer[refIndex-3]^dataSendBuffer[refIndex-2]^dataSendBuffer[refIndex-1])&0x7F;
+                            }
+                        }
+                        dataSendBuffer[refIndex]=MCU2PC_TERMINATOR_;
+                        SerialSendData(UART_PC_,dataSendBuffer);
+                    }
+                    else{
+                        SerialPutStrLn(UART_PC_,"e_l_3");
+                    }
+                    break;
+                case PC_SAM_SP_MODE_13_:
+                    //                    SerialPutStrLn(UART_PC_,"sm2");
+                    if(serialPC.dataIndex==3){//check length of data
+                        while(samReadBusy);
+                        samReadBusy=1;
+                        toggle_led[1]^=1;
+                        led(LED_BLUE,toggle_led[1]);
+                        samReadCurrentID_C1=1;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C1);
+                        samReadCurrentID_C6=0;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C6);
+                        samReadCurrentID_C7=10;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C7);
+                        samReadCurrentID_C2=13;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C2);
+                        samReadCurrentID_C4=12;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C4);
+
+                        Timer1_Reset();
+
+                        while(samReadBusy);
+                        samReadBusy=1;
+                        samReadCurrentID_C1=3;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C1);
+                        samReadCurrentID_C6=2;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C6);
+                        samReadCurrentID_C7=11;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C7);
+
+                        samReadCurrentID_C2=15;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C2);
+                        samReadCurrentID_C4=14;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C4);
+                        Timer1_Reset();
+
+                        while(samReadBusy);
+                        samReadBusy=1;
+                        samReadCurrentID_C1=5;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C1);
+                        samReadCurrentID_C6=4;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C6);
+
+                        samReadCurrentID_C7=22;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C7);
+                        samReadCurrentID_C2=17;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C2);
+                        samReadCurrentID_C4=16;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C4);
+                        Timer1_Reset();
+
+                        while(samReadBusy);
+                        samReadBusy=1;
+                        samReadCurrentID_C1=7;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C1);
+                        samReadCurrentID_C6=6;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C6);
+                        samReadCurrentID_C2=19;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C2);
+                        samReadCurrentID_C4=18;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C4);
+                        Timer1_Reset();
+
+                        while(samReadBusy);
+                        samReadBusy=1;
+                        samReadCurrentID_C1=9;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C1);
+                        samReadCurrentID_C6=8;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C6);
+                        samReadCurrentID_C2=24;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C2);
+                        samReadCurrentID_C4=23;
+                        SAM_get_jointAngle12bit(samReadCurrentID_C4);
+                        Timer1_Reset();
+
+
+                        while(samReadBusy);
+                        unsigned char i;
+                        unsigned char refIndex=2;
+                        dataSendBuffer[0]=MCU2PC_HEADER_;
+                        dataSendBuffer[1]=PC_SAM_SP_MODE_13_;
+                        for (i=0;i<NUM_OF_SAM_;i++)
+                        {
+                            if(samDataAvail[i])
+                            {
+                                samDataAvail[i]=0;
+                                dataSendBuffer[refIndex++]=i&0x1F;
+                                dataSendBuffer[refIndex++]=(samPosition12[i]>>7)&0x1F;
+                                dataSendBuffer[refIndex++]=(samPosition12[i])&0x7F;
                                 dataSendBuffer[refIndex++]=(dataSendBuffer[refIndex-3]^dataSendBuffer[refIndex-2]^dataSendBuffer[refIndex-1])&0x7F;
                             }
                         }

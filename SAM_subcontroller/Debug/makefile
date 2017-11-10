@@ -129,32 +129,32 @@ endif
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXE_OUTPUTS += \
-SAM_subcontroller.out \
+SAM_sub_controller.out \
 
 EXE_OUTPUTS__QUOTED += \
-"SAM_subcontroller.out" \
+"SAM_sub_controller.out" \
 
 BIN_OUTPUTS += \
-SAM_subcontroller.hex \
+SAM_sub_controller.hex \
 
 BIN_OUTPUTS__QUOTED += \
-"SAM_subcontroller.hex" \
+"SAM_sub_controller.hex" \
 
 
 # All Target
-all: SAM_subcontroller.out
+all: SAM_sub_controller.out
 
 # Tool invocations
-SAM_subcontroller.out: $(OBJS) $(CMD_SRCS) $(LIB_SRCS) $(GEN_CMDS)
+SAM_sub_controller.out: $(OBJS) $(CMD_SRCS) $(LIB_SRCS) $(GEN_CMDS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: ARM Linker'
-	"/opt/ti/ccs710/ccsv7/tools/compiler/ti-cgt-arm_16.9.1.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 --abi=eabi -me -g --gcc --define=ccs="ccs" --define=PART_TM4C123GH6PM --diag_wrap=off --diag_warning=225 --display_error_number -z -m"SAM_subcontroller.map" --heap_size=0 --stack_size=512 -i"/opt/ti/ccs710/ccsv7/tools/compiler/ti-cgt-arm_16.9.1.LTS/lib" -i"/opt/ti/ccs710/ccsv7/tools/compiler/ti-cgt-arm_16.9.1.LTS/include" --reread_libs --display_error_number --diag_wrap=off --warn_sections --xml_link_info="SAM_subcontroller_linkInfo.xml" --rom_model -o "SAM_subcontroller.out" $(ORDERED_OBJS)
+	"/opt/ti/ccs710/ccsv7/tools/compiler/ti-cgt-arm_16.9.1.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 --abi=eabi -me -g --gcc --define=ccs="ccs" --define=PART_TM4C123GH6PM --diag_wrap=off --diag_warning=225 --display_error_number -z -m"SAM_sub_controller.map" --heap_size=0 --stack_size=512 -i"/opt/ti/ccs710/ccsv7/tools/compiler/ti-cgt-arm_16.9.1.LTS/lib" -i"/opt/ti/ccs710/ccsv7/tools/compiler/ti-cgt-arm_16.9.1.LTS/include" --reread_libs --display_error_number --diag_wrap=off --warn_sections --xml_link_info="SAM_sub_controller_linkInfo.xml" --rom_model -o "SAM_sub_controller.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
-SAM_subcontroller.hex: $(EXE_OUTPUTS)
+SAM_sub_controller.hex: $(EXE_OUTPUTS)
 	@echo 'Invoking: ARM Hex Utility'
-	"/opt/ti/ccs710/ccsv7/tools/compiler/ti-cgt-arm_16.9.1.LTS/bin/armhex"  -o "SAM_subcontroller.hex" $(EXE_OUTPUTS__QUOTED)
+	"/opt/ti/ccs710/ccsv7/tools/compiler/ti-cgt-arm_16.9.1.LTS/bin/armhex"  -o "SAM_sub_controller.hex" $(EXE_OUTPUTS__QUOTED)
 	@echo 'Finished building: $@'
 	@echo ' '
 

@@ -47,11 +47,15 @@
 #define PC_SAM_SP_MODE_7_ 0x81
 #define PC_SAM_SP_MODE_8_ 0xBB
 
+
 #define PC_SAM_SP_MODE_9_ 0xBD//Set Average Torque of many SAMs
 #define PC_SAM_SP_MODE_10_ 0xBF//Read Average Torque of many SAMs
 
 #define PC_SAM_SP_MODE_11_ 0xC1 //Set quick PD of many SAMs
 #define PC_SAM_SP_MODE_12_ 0xC3//Read Quick PD of many SAMs
+#define PC_SAM_SP_MODE_14_ 0xC2 // set runtime PDI of many SAMs
+
+#define PC_SAM_SP_MODE_13_ 0x99// Read Full position
 //#define PC_SAM_READ_1_ 2
 //#define
 

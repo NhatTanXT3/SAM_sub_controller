@@ -1,9 +1,9 @@
 ******************************************************************************
                   TI ARM Linker Unix v16.9.1                   
 ******************************************************************************
->> Linked Thu Jul 27 16:44:21 2017
+>> Linked Thu Jul 27 16:43:56 2017
 
-OUTPUT FILE NAME:   <SAM_subcontroller.out>
+OUTPUT FILE NAME:   <SensorHub.out>
 ENTRY POINT SYMBOL: "_c_int00"  address: 000048a5
 
 
